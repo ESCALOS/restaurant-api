@@ -5,6 +5,8 @@ import com.nanoka.restaurant_api.user.utils.ErrorCatelog;
 import com.nanoka.restaurant_api.util.response.ErrorResponse;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,7 +22,7 @@ public class GlobalControllerAdvice {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(UserNotFoundException.class)
-    public ErrorResponse handleStudentNotFoundException() {
+    public ErrorResponse handleUserNotFoundException() {
         return ErrorResponse.builder()
                 .code(ErrorCatelog.USER_NOT_FOUND.getCode())
                 .message(ErrorCatelog.USER_NOT_FOUND.getMessage())
@@ -46,6 +48,28 @@ public class GlobalControllerAdvice {
                 .build();
     }
 
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(AccessDeniedException.class)
+    public ErrorResponse handleAccessDeniedException() {
+        return ErrorResponse.builder()
+                .code(ErrorCatelog.ACCESS_DENIED.getCode())
+                .message(ErrorCatelog.ACCESS_DENIED.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(BadCredentialsException.class)
+    public ErrorResponse handleBadCredentialsException() {
+        return ErrorResponse.builder()
+                .code(ErrorCatelog.BAD_CREDENTIALS.getCode())
+                .message(ErrorCatelog.BAD_CREDENTIALS.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+    }
+
+    // Manejo genérico para otras excepciones
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public ErrorResponse handleException(Exception ex) {
