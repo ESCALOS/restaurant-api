@@ -2,6 +2,7 @@ package com.nanoka.restaurant_api.user.infrastructure.adapters.input.rest;
 
 import com.nanoka.restaurant_api.user.application.ports.input.UserServicePort;
 import com.nanoka.restaurant_api.user.infrastructure.adapters.input.rest.mapper.UserRestMapper;
+import com.nanoka.restaurant_api.user.infrastructure.adapters.input.rest.model.request.ChangePasswordRequest;
 import com.nanoka.restaurant_api.user.infrastructure.adapters.input.rest.model.request.UserCreateRequest;
 import com.nanoka.restaurant_api.user.infrastructure.adapters.input.rest.model.response.UserResponse;
 import jakarta.validation.Valid;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,4 +40,23 @@ public class UserController {
                 .body(restMapper.toUserResponse(servicePort.save(restMapper.toUser(request))));
     }
 
+    @PutMapping("/{id}")
+    public UserResponse update(@PathVariable Long id, @Valid @RequestBody UserCreateRequest request) {
+        return restMapper.toUserResponse(servicePort.update(id, restMapper.toUser(request)));
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        servicePort.delete(id);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping("/change-password")
+    public ResponseEntity<String> changePassword(@RequestBody @Valid ChangePasswordRequest request) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        servicePort.changePassword(username, request.getCurrentPassword(), request.getNewPassword());
+
+        return ResponseEntity.ok("Contraseña cambiada exitosamente.");
+    }
 }

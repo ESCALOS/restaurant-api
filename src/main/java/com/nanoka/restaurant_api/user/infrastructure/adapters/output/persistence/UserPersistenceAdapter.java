@@ -30,6 +30,12 @@ public class UserPersistenceAdapter implements UserPersistencePort {
     }
 
     @Override
+    public Optional<User> findByDocumentNumber(String documentNumber) {
+        return repository.findByDocumentNumber(documentNumber)
+                .map(mapper::toUser);
+    }
+
+    @Override
     public List<User> findAll() {
         return mapper.toUserList(repository.findAll());
     }

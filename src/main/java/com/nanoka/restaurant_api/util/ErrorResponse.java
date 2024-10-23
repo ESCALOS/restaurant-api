@@ -1,4 +1,4 @@
-package com.nanoka.restaurant_api.util.response;
+package com.nanoka.restaurant_api.util;
 
 import lombok.Builder;
 import lombok.Getter;

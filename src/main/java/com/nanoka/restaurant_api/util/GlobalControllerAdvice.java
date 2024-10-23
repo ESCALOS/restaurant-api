@@ -1,8 +1,8 @@
-package com.nanoka.restaurant_api.user.infrastructure.adapters.input.rest;
+package com.nanoka.restaurant_api.util;
 
+import com.nanoka.restaurant_api.user.domain.exception.DocumentNumberAlreadyExistsException;
 import com.nanoka.restaurant_api.user.domain.exception.UserNotFoundException;
-import com.nanoka.restaurant_api.user.utils.ErrorCatelog;
-import com.nanoka.restaurant_api.util.response.ErrorResponse;
+import com.nanoka.restaurant_api.user.domain.exception.UsernameAlreadyExistsException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
@@ -26,6 +26,30 @@ public class GlobalControllerAdvice {
         return ErrorResponse.builder()
                 .code(ErrorCatelog.USER_NOT_FOUND.getCode())
                 .message(ErrorCatelog.USER_NOT_FOUND.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(UsernameAlreadyExistsException.class)
+    public ErrorResponse handleUsernameAlreadyExistsException() {
+
+
+        return ErrorResponse.builder()
+                .code(ErrorCatelog.USER_USERNAME_ALREADY_EXISTS.getCode())
+                .message(ErrorCatelog.USER_USERNAME_ALREADY_EXISTS.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(DocumentNumberAlreadyExistsException.class)
+    public ErrorResponse handleDocumentNumberAlreadyExistsExceptionException() {
+
+
+        return ErrorResponse.builder()
+                .code(ErrorCatelog.USER_DOCUMENT_NUMBER_ALREADY_EXISTS.getCode())
+                .message(ErrorCatelog.USER_DOCUMENT_NUMBER_ALREADY_EXISTS.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build();
     }

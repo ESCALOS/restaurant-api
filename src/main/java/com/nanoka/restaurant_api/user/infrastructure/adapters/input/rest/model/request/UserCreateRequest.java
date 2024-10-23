@@ -16,9 +16,6 @@ public class UserCreateRequest {
     @NotBlank(message = "Field username cannot be empty or null")
     private String username;
 
-    @NotBlank(message = "Field password cannot be empty or null")
-    private String password;
-
     @NotBlank(message = "Field name cannot be empty or null")
     private String name;
 
@@ -30,9 +27,6 @@ public class UserCreateRequest {
 
     @NotBlank(message = "Field phone cannot be empty or null")
     private String phone;
-
-    @NotNull(message = "Field isEnabled cannot be null")
-    private Boolean isEnabled;
 
     @NotNull(message = "Field roles cannot be empty")
     private String role;
