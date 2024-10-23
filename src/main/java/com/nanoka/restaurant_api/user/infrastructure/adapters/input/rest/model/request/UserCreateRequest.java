@@ -1,12 +1,9 @@
 package com.nanoka.restaurant_api.user.infrastructure.adapters.input.rest.model.request;
 
 import com.nanoka.restaurant_api.user.domain.model.DocumentTypeEnum;
-import com.nanoka.restaurant_api.user.domain.model.RoleEnum;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-
-import java.util.List;
 
 @Getter
 @Setter
@@ -38,5 +35,5 @@ public class UserCreateRequest {
     private Boolean isEnabled;
 
     @NotNull(message = "Field roles cannot be empty")
-    private List<@NotNull RoleEnum> roles; // Cambia List<String> a List<RoleEnum>
+    private String role;
 }

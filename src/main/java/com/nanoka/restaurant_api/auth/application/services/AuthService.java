@@ -38,7 +38,7 @@ public class AuthService implements UserDetailsService {
 
         List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
 
-        user.getRoles().forEach(role -> authorityList.add(new SimpleGrantedAuthority("ROLE_".concat(role.getRoleEnum().name()))));
+        authorityList.add(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
 
         return new User(user.getUsername(), user.getPassword(), user.getIsEnabled(), true, true, true, authorityList);
     }

@@ -2,8 +2,6 @@ package com.nanoka.restaurant_api;
 
 import com.nanoka.restaurant_api.user.domain.model.DocumentTypeEnum;
 import com.nanoka.restaurant_api.user.domain.model.RoleEnum;
-import com.nanoka.restaurant_api.user.infrastructure.adapters.output.persistence.entity.PermissionEntity;
-import com.nanoka.restaurant_api.user.infrastructure.adapters.output.persistence.entity.RoleEntity;
 import com.nanoka.restaurant_api.user.infrastructure.adapters.output.persistence.entity.UserEntity;
 import com.nanoka.restaurant_api.user.infrastructure.adapters.output.persistence.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -13,7 +11,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
-import java.util.Set;
 
 @SpringBootApplication
 public class RestaurantApiApplication {
@@ -26,17 +23,6 @@ public class RestaurantApiApplication {
 	@Bean
 	CommandLineRunner init(UserRepository userRepository) {
 		return args -> {
-            new PermissionEntity();
-
-			RoleEntity roleAdmin = RoleEntity.builder()
-					.roleEnum(RoleEnum.ADMIN)
-					.build();
-			RoleEntity roleWaiter = RoleEntity.builder()
-					.roleEnum(RoleEnum.WAITER)
-					.build();
-			RoleEntity roleStoreKeeper = RoleEntity.builder()
-					.roleEnum(RoleEnum.STOREKEEPER)
-					.build();
 
 			UserEntity userCarlos = UserEntity.builder()
 					.username("carlos")
@@ -46,7 +32,7 @@ public class RestaurantApiApplication {
 					.documentNumber("70821326")
 					.phone("941678196")
 					.isEnabled(true)
-					.roles(Set.of(roleAdmin))
+					.role(RoleEnum.ADMIN)
 					.build();
 
 			UserEntity userDaniel = UserEntity.builder()
@@ -57,7 +43,7 @@ public class RestaurantApiApplication {
 					.documentNumber("72461467")
 					.phone("926852390")
 					.isEnabled(true)
-					.roles(Set.of(roleWaiter))
+					.role(RoleEnum.WAITER)
 					.build();
 
 			UserEntity userRodrigo = UserEntity.builder()
@@ -68,7 +54,7 @@ public class RestaurantApiApplication {
 					.documentNumber("70821335")
 					.phone("981683417")
 					.isEnabled(true)
-					.roles(Set.of(roleStoreKeeper))
+					.role(RoleEnum.STOREKEEPER)
 					.build();
 
 			userRepository.saveAll(List.of(userCarlos, userDaniel, userRodrigo));

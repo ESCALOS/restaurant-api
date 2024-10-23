@@ -3,7 +3,6 @@ package com.nanoka.restaurant_api.user.domain.model;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Builder
 @Getter
@@ -21,5 +20,5 @@ public class User {
  private Boolean isEnabled;
  private LocalDateTime createdAt;
  private LocalDateTime updatedAt;
- private Set<Role> roles;
+ private RoleEnum role;
 }

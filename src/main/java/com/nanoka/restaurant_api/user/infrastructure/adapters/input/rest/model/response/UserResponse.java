@@ -1,11 +1,10 @@
 package com.nanoka.restaurant_api.user.infrastructure.adapters.input.rest.model.response;
 
 import com.nanoka.restaurant_api.user.domain.model.DocumentTypeEnum;
-import com.nanoka.restaurant_api.user.domain.model.Role;
+import com.nanoka.restaurant_api.user.domain.model.RoleEnum;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Builder
 @Getter
@@ -22,5 +21,5 @@ public class UserResponse {
     private Boolean isEnabled;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private Set<Role> roles;
+    private RoleEnum role;
 }
