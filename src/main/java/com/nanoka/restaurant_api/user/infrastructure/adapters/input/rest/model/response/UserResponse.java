@@ -2,11 +2,9 @@ package com.nanoka.restaurant_api.user.infrastructure.adapters.input.rest.model.
 
 import com.nanoka.restaurant_api.user.domain.model.DocumentTypeEnum;
 import com.nanoka.restaurant_api.user.domain.model.Role;
-import com.nanoka.restaurant_api.user.domain.model.RoleEnum;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 
 @Builder

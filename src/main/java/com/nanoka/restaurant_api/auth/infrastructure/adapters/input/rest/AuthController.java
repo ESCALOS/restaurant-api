@@ -5,7 +5,6 @@ import com.nanoka.restaurant_api.auth.infrastructure.adapters.input.rest.model.r
 import com.nanoka.restaurant_api.auth.infrastructure.adapters.input.rest.model.response.AuthResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,12 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 @PreAuthorize("permitAll()")
 public class AuthController {
 
-    @Autowired
-    private AuthService authService;
+
+    private final AuthService authService;
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody @Valid AuthLoginRequest userRequest) {
-        return new ResponseEntity<AuthResponse>(this.authService.loginUser(userRequest), HttpStatus.OK);
+        return new ResponseEntity<>(this.authService.loginUser(userRequest), HttpStatus.OK);
     }
 
 }

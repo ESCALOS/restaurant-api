@@ -6,7 +6,6 @@ import com.nanoka.restaurant_api.user.infrastructure.adapters.output.persistence
 import com.nanoka.restaurant_api.user.infrastructure.adapters.output.persistence.repository.UserRepository;
 import com.nanoka.restaurant_api.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,13 +25,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AuthService implements UserDetailsService {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private JwtUtils jwtUtils;
+    private final JwtUtils jwtUtils;
 
-    @Autowired
     private final UserRepository repository;
 
     @Override
