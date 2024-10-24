@@ -25,7 +25,6 @@ public class UserCreateRequest {
     @NotBlank(message = "El número de documento es obligatorio")
     private String documentNumber;
 
-    @NotBlank(message = "El número de teléfono es obligatorio")
     private String phone;
 
     @NotNull(message = "El rol es obligatorio")

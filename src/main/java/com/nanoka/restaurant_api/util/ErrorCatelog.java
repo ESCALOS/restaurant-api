@@ -8,7 +8,9 @@ public enum ErrorCatelog {
 
     USER_NOT_FOUND("Usuario no encontrado"),
     CATEGORY_NOT_FOUND("Categoria no encontrada"),
+    CATEGORY_ALREADY_EXIST("La categoría ya existe"),
     PRODUCT_NOT_FOUND("Produto no encontrado"),
+    PRODUCT_ALREADY_EXIST("El produto ya existe"),
     INVALID_USER("Parámetros de usuario no válidos."),
     USER_USERNAME_ALREADY_EXISTS("El nombre de usuario ya existe."),
     USER_DOCUMENT_NUMBER_ALREADY_EXISTS("Otro usuario ya tiene este número de documento."),

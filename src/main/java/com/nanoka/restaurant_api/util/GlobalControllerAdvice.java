@@ -1,6 +1,6 @@
 package com.nanoka.restaurant_api.util;
 
-import com.nanoka.restaurant_api.util.exceptions.BadRequestException;
+import com.nanoka.restaurant_api.util.exceptions.ConflictException;
 import com.nanoka.restaurant_api.util.exceptions.NotFoundException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -28,9 +28,9 @@ public class GlobalControllerAdvice {
                 .build();
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(BadRequestException.class)
-    public ErrorResponse handleBadRequestException(BadRequestException ex) {
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(ConflictException.class)
+    public ErrorResponse handleBadRequestException(ConflictException ex) {
         return ErrorResponse.builder()
                 .message(ex.getMessage())
                 .timestamp(LocalDateTime.now())

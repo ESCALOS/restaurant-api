@@ -24,7 +24,7 @@ public class ProductCreateRequest {
     private String imageUrl;
 
     @NotNull(message = "Ingrese el tipo")
-    private Boolean isPrepared;
+    private Boolean isDish;
 
     @NotNull(message = "Ingrese la cantidad")
     private int stock;

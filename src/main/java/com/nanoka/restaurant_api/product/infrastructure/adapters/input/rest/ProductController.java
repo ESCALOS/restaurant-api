@@ -34,6 +34,9 @@ public class ProductController {
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProductResponse> save(@Valid @RequestBody ProductCreateRequest request) {
+
+
+
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(restMapper.toProductResponse(
                         servicePort.save(restMapper.toProduct(request))));

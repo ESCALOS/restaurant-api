@@ -18,7 +18,7 @@ public class ProductEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @Column(nullable = false)
@@ -30,7 +30,7 @@ public class ProductEntity {
     private String imageUrl;
 
     @Column(nullable = false)
-    private Boolean isPrepared;
+    private Boolean isDish;
 
     @Column(nullable = false)
     private int stock;

@@ -7,6 +7,7 @@ import java.util.Optional;
 
 public interface ProductPersistencePort {
     Optional<Product> findById(Long id);
+    Optional<Product> findByName(String name);
     List<Product> findAll();
     Product save(Product product);
     void deleteById(Long id);

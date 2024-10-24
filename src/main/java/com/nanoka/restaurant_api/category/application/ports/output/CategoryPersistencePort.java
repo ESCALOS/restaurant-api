@@ -7,6 +7,7 @@ import java.util.Optional;
 
 public interface CategoryPersistencePort {
     Optional<Category> findById(Long id);
+    Optional<Category> findByName(String name);
     List<Category> findAll();
     Category save(Category category);
     void deleteById(Long id);

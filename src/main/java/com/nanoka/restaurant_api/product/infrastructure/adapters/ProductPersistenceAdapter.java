@@ -24,6 +24,12 @@ public class ProductPersistenceAdapter implements ProductPersistencePort {
     }
 
     @Override
+    public Optional<Product> findByName(String name) {
+        return repository.findByName(name)
+                .map(mapper::toProduct);
+    }
+
+    @Override
     public List<Product> findAll() {
         return mapper.toProductList(repository.findAll());
     }

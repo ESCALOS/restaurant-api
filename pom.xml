@@ -9,11 +9,11 @@
 		<version>3.3.3</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.nanoka.students</groupId>
-	<artifactId>students</artifactId>
+	<groupId>com.nanoka.restaurant_api</groupId>
+	<artifactId>restaurant-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>students</name>
-	<description>Students API REST</description>
+	<name>restaurant</name>
+	<description>Restaurant API REST</description>
 	<url />
 	<licenses>
 		<license />

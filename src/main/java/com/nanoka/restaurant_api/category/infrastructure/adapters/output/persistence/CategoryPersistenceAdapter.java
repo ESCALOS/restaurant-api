@@ -24,6 +24,12 @@ public class CategoryPersistenceAdapter implements CategoryPersistencePort {
     }
 
     @Override
+    public Optional<Category> findByName(String name) {
+        return repository.findByName(name)
+                .map(mapper::toCategory);
+    }
+
+    @Override
     public List<Category> findAll() {
         return mapper.toCategoryList(repository.findAll());
     }

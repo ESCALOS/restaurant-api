@@ -16,7 +16,7 @@ public class Product {
     private String description;
     private BigDecimal price;
     private String imageUrl;
-    private Boolean isPrepared;
+    private Boolean isDish;
     private int stock;
     private Category category;
 
