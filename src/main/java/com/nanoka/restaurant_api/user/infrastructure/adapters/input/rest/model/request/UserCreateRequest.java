@@ -13,21 +13,21 @@ import lombok.*;
 public class UserCreateRequest {
 
 
-    @NotBlank(message = "Field username cannot be empty or null")
+    @NotBlank(message = "El nombre de usuario es obligatorio")
     private String username;
 
-    @NotBlank(message = "Field name cannot be empty or null")
+    @NotBlank(message = "El nombre es obligatorio")
     private String name;
 
-    @NotNull(message = "Field documentType cannot be null")
+    @NotNull(message = "El tipo de documento es obligatorio")
     private DocumentTypeEnum documentType; // Usa DocumentTypeEnum en lugar de String
 
-    @NotBlank(message = "Field documentNumber cannot be empty or null")
+    @NotBlank(message = "El número de documento es obligatorio")
     private String documentNumber;
 
-    @NotBlank(message = "Field phone cannot be empty or null")
+    @NotBlank(message = "El número de teléfono es obligatorio")
     private String phone;
 
-    @NotNull(message = "Field roles cannot be empty")
+    @NotNull(message = "El rol es obligatorio")
     private String role;
 }

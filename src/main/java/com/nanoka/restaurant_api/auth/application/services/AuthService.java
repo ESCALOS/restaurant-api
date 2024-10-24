@@ -52,18 +52,18 @@ public class AuthService implements UserDetailsService {
 
         String accessToken = jwtUtils.createToken(authentication);
 
-        return new AuthResponse(username, "User logged successfully", accessToken, true);
+        return new AuthResponse(username, "El usuario ha iniciado sesión correctamente", accessToken, true);
     }
 
     public Authentication authenticate(String username, String password) {
         UserDetails userDetails = this.loadUserByUsername(username);
 
         if(userDetails == null) {
-            throw new BadCredentialsException("Invalid username or password");
+            throw new BadCredentialsException("Username o contraseña inválida");
         }
 
         if(!passwordEncoder.matches(password, userDetails.getPassword())) {
-            throw new BadCredentialsException("Invalid password");
+            throw new BadCredentialsException("Contraseña inválida");
         }
 
         return new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());

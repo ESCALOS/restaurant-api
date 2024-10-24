@@ -1,8 +1,7 @@
 package com.nanoka.restaurant_api.util;
 
-import com.nanoka.restaurant_api.user.domain.exception.DocumentNumberAlreadyExistsException;
-import com.nanoka.restaurant_api.user.domain.exception.UserNotFoundException;
-import com.nanoka.restaurant_api.user.domain.exception.UsernameAlreadyExistsException;
+import com.nanoka.restaurant_api.util.exceptions.BadRequestException;
+import com.nanoka.restaurant_api.util.exceptions.NotFoundException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
@@ -21,35 +20,19 @@ import java.util.stream.Collectors;
 public class GlobalControllerAdvice {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(UserNotFoundException.class)
-    public ErrorResponse handleUserNotFoundException() {
+    @ExceptionHandler(NotFoundException.class)
+    public ErrorResponse handleUserNotFoundException(NotFoundException ex) {
         return ErrorResponse.builder()
-                .code(ErrorCatelog.USER_NOT_FOUND.getCode())
-                .message(ErrorCatelog.USER_NOT_FOUND.getMessage())
+                .message(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build();
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(UsernameAlreadyExistsException.class)
-    public ErrorResponse handleUsernameAlreadyExistsException() {
-
-
+    @ExceptionHandler(BadRequestException.class)
+    public ErrorResponse handleBadRequestException(BadRequestException ex) {
         return ErrorResponse.builder()
-                .code(ErrorCatelog.USER_USERNAME_ALREADY_EXISTS.getCode())
-                .message(ErrorCatelog.USER_USERNAME_ALREADY_EXISTS.getMessage())
-                .timestamp(LocalDateTime.now())
-                .build();
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(DocumentNumberAlreadyExistsException.class)
-    public ErrorResponse handleDocumentNumberAlreadyExistsExceptionException() {
-
-
-        return ErrorResponse.builder()
-                .code(ErrorCatelog.USER_DOCUMENT_NUMBER_ALREADY_EXISTS.getCode())
-                .message(ErrorCatelog.USER_DOCUMENT_NUMBER_ALREADY_EXISTS.getMessage())
+                .message(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build();
     }
@@ -62,7 +45,6 @@ public class GlobalControllerAdvice {
         BindingResult result = ex.getBindingResult();
 
         return ErrorResponse.builder()
-                .code(ErrorCatelog.INVALID_USER.getCode())
                 .message(ErrorCatelog.INVALID_USER.getMessage())
                 .details(result.getFieldErrors()
                         .stream()
@@ -76,7 +58,6 @@ public class GlobalControllerAdvice {
     @ExceptionHandler(AccessDeniedException.class)
     public ErrorResponse handleAccessDeniedException() {
         return ErrorResponse.builder()
-                .code(ErrorCatelog.ACCESS_DENIED.getCode())
                 .message(ErrorCatelog.ACCESS_DENIED.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build();
@@ -86,7 +67,6 @@ public class GlobalControllerAdvice {
     @ExceptionHandler(BadCredentialsException.class)
     public ErrorResponse handleBadCredentialsException() {
         return ErrorResponse.builder()
-                .code(ErrorCatelog.BAD_CREDENTIALS.getCode())
                 .message(ErrorCatelog.BAD_CREDENTIALS.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build();
@@ -98,7 +78,6 @@ public class GlobalControllerAdvice {
     @ExceptionHandler(Exception.class)
     public ErrorResponse handleException(Exception ex) {
         return ErrorResponse.builder()
-                .code(ErrorCatelog.GENERIC_ERROR.getCode())
                 .message(ErrorCatelog.GENERIC_ERROR.getMessage())
                 .details(Collections.singletonList(ex.getMessage()))
                 .timestamp(LocalDateTime.now())

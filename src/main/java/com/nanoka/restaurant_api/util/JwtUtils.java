@@ -55,7 +55,7 @@ public class JwtUtils {
 
             return verifier.verify(token);
         } catch (JWTVerificationException e) {
-            throw new BadCredentialsException("Invalid JWT token");
+            throw new BadCredentialsException("Token no válido");
         }
     }
 

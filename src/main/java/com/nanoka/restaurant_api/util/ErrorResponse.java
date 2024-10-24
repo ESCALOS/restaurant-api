@@ -11,7 +11,6 @@ import java.util.List;
 @Getter
 @Setter
 public class ErrorResponse {
-    private String code;
     private String message;
     private List<String> details;
     private LocalDateTime timestamp;

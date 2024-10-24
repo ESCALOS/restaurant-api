@@ -9,9 +9,9 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class ChangePasswordRequest {
-    @NotBlank
+    @NotBlank(message = "Ingresa la contraseña actual")
     private String currentPassword;
 
-    @NotBlank
+    @NotBlank(message = "Ingresa la contraseña nueva")
     private String newPassword;
 }
