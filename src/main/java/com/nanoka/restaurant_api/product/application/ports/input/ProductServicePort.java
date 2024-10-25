@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface ProductServicePort {
     Product findById(Long id);
-    List<Product> findAll();
-    Product save(Product product);
+    List<Product> findAll(Boolean isDish);
+    Product save(Product product, Boolean isDish);
     Product update(Long id,Product product);
     void delete(Long id);
 }

@@ -17,7 +17,8 @@ public class Product {
     private BigDecimal price;
     private String imageUrl;
     private Boolean isDish;
-    private int stock;
+    private int stock = 0;
+    private int minStock = 0;
     private Category category;
 
 }

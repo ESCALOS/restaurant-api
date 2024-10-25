@@ -3,7 +3,9 @@ package com.nanoka.restaurant_api.product.infrastructure.adapters.input.rest.map
 import com.nanoka.restaurant_api.category.application.ports.input.CategoryServicePort;
 import com.nanoka.restaurant_api.category.domain.model.Category;
 import com.nanoka.restaurant_api.product.domain.model.Product;
+import com.nanoka.restaurant_api.product.infrastructure.adapters.input.rest.model.request.DishCreateRequest;
 import com.nanoka.restaurant_api.product.infrastructure.adapters.input.rest.model.request.ProductCreateRequest;
+import com.nanoka.restaurant_api.product.infrastructure.adapters.input.rest.model.response.DishResponse;
 import com.nanoka.restaurant_api.product.infrastructure.adapters.input.rest.model.response.ProductResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -22,9 +24,16 @@ public abstract class ProductRestMapper {
     @Mapping(target = "category", source = "categoryId", qualifiedByName = "mapCategoryIdToCategory")
     public abstract Product toProduct(ProductCreateRequest request);
 
+    @Mapping(target = "category", source = "categoryId", qualifiedByName = "mapCategoryIdToCategory")
+    public abstract Product toDish(DishCreateRequest request);
+
     public abstract ProductResponse toProductResponse(Product product);
 
+    public abstract DishResponse toDishResponse(Product product);
+
     public abstract List<ProductResponse> toProductResponseList(List<Product> productList);
+
+    public abstract List<DishResponse> toDishResponseList(List<Product> productList);
 
     @Named("mapCategoryIdToCategory")
     public Category mapCategoryIdToCategory(Long categoryId) {

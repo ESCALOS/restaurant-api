@@ -2,8 +2,8 @@ package com.nanoka.restaurant_api.product.infrastructure.adapters.input.rest;
 
 import com.nanoka.restaurant_api.product.application.ports.input.ProductServicePort;
 import com.nanoka.restaurant_api.product.infrastructure.adapters.input.rest.mapper.ProductRestMapper;
-import com.nanoka.restaurant_api.product.infrastructure.adapters.input.rest.model.request.ProductCreateRequest;
-import com.nanoka.restaurant_api.product.infrastructure.adapters.input.rest.model.response.ProductResponse;
+import com.nanoka.restaurant_api.product.infrastructure.adapters.input.rest.model.request.DishCreateRequest;
+import com.nanoka.restaurant_api.product.infrastructure.adapters.input.rest.model.response.DishResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,35 +15,35 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/products")
+@RequestMapping("/api/v1/dishes")
 @PreAuthorize("isAuthenticated()")
-public class ProductController {
+public class DishController {
     private final ProductServicePort servicePort;
     private final ProductRestMapper restMapper;
 
     @GetMapping
-    public List<ProductResponse> findAll() {
-        return restMapper.toProductResponseList(servicePort.findAll(false));
+    public List<DishResponse> findAll() {
+        return restMapper.toDishResponseList(servicePort.findAll(true));
     }
 
     @GetMapping("/{id}")
-    public ProductResponse findById(@PathVariable("id") Long id) {
-        return  restMapper.toProductResponse(servicePort.findById(id));
+    public DishResponse findById(@PathVariable("id") Long id) {
+        return  restMapper.toDishResponse(servicePort.findById(id));
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ProductResponse> save(@Valid @RequestBody ProductCreateRequest request) {
+    public ResponseEntity<DishResponse> save(@Valid @RequestBody DishCreateRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(restMapper.toProductResponse(
-                        servicePort.save(restMapper.toProduct(request),false)));
+                .body(restMapper.toDishResponse(
+                        servicePort.save(restMapper.toDish(request),true)));
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ProductResponse update(@PathVariable Long id, @Valid @RequestBody ProductCreateRequest request) {
-        return restMapper.toProductResponse(
-                servicePort.update(id, restMapper.toProduct(request)));
+    public DishResponse update(@PathVariable Long id, @Valid @RequestBody DishCreateRequest request) {
+        return restMapper.toDishResponse(
+                servicePort.update(id, restMapper.toDish(request)));
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

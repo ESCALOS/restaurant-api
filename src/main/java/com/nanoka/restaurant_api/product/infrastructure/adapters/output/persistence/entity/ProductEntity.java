@@ -21,7 +21,6 @@ public class ProductEntity {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @Column(nullable = false)
     private String description;
 
     @Column(nullable = false)
@@ -34,6 +33,9 @@ public class ProductEntity {
 
     @Column(nullable = false)
     private int stock;
+
+    @Column(nullable = false,  name = "min_stock")
+    private int minStock;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id", nullable = false)

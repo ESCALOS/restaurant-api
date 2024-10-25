@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductCreateRequest {
+public class DishCreateRequest {
     @NotBlank(message = "El nombre del producto es obligatorio")
     private String name;
 
@@ -21,12 +21,6 @@ public class ProductCreateRequest {
     private BigDecimal price;
 
     private String imageUrl;
-
-    @NotNull(message = "Ingrese la cantidad")
-    private int stock;
-
-    @NotNull(message = "Ingrese el stock mínimo")
-    private int minStock;
 
     @NotNull(message = "El category_id es obligatorio")
     private Long categoryId;

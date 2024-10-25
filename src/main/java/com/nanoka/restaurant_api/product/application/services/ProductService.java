@@ -23,15 +23,15 @@ public class ProductService implements ProductServicePort {
     }
 
     @Override
-    public List<Product> findAll() { return persistencePort.findAll(); }
+    public List<Product> findAll(Boolean isDish) { return persistencePort.findAll(isDish); }
 
     @Override
-    public Product save(Product product) {
+    public Product save(Product product, Boolean isDish) {
         persistencePort.findByName(product.getName())
                 .ifPresent(p -> {
                     throw new ConflictException(ErrorCatelog.PRODUCT_ALREADY_EXIST.getMessage());
                 });
-
+        product.setIsDish(isDish);
         return persistencePort.save(product);
     }
 
@@ -48,8 +48,9 @@ public class ProductService implements ProductServicePort {
                     existingProduct.setDescription(product.getDescription());
                     existingProduct.setPrice(product.getPrice());
                     existingProduct.setImageUrl(product.getImageUrl());
-                    existingProduct.setIsDish(product.getIsDish());
                     existingProduct.setCategory(product.getCategory());
+                    existingProduct.setStock(product.getStock());
+                    existingProduct.setMinStock(product.getMinStock());
                     return persistencePort.save(existingProduct);
                 })
                 .orElseThrow(() -> new NotFoundException(ErrorCatelog.PRODUCT_NOT_FOUND.getMessage()));

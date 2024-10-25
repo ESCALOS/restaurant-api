@@ -30,8 +30,12 @@ public class ProductPersistenceAdapter implements ProductPersistencePort {
     }
 
     @Override
-    public List<Product> findAll() {
-        return mapper.toProductList(repository.findAll());
+    public List<Product> findAll(Boolean isDish) {
+        if(isDish) {
+            return mapper.toProductList(repository.findByIsDishTrue());
+        } else{
+            return mapper.toProductList(repository.findByIsDishFalse());
+        }
     }
 
     @Override
