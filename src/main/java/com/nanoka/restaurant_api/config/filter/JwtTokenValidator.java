@@ -48,7 +48,7 @@ public class JwtTokenValidator extends OncePerRequestFilter {
                 Authentication authentication = new UsernamePasswordAuthenticationToken(username, null, authorities);
                 context.setAuthentication(authentication);
                 SecurityContextHolder.setContext(context);
-            }catch (Exception e) {
+            } catch (Exception e) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid Token");
             }
         }

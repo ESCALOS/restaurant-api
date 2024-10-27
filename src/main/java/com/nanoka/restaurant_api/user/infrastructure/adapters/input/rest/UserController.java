@@ -6,6 +6,7 @@ import com.nanoka.restaurant_api.user.infrastructure.adapters.input.rest.model.r
 import com.nanoka.restaurant_api.user.infrastructure.adapters.input.rest.model.request.UserCreateRequest;
 import com.nanoka.restaurant_api.user.infrastructure.adapters.input.rest.model.response.UserResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,4 +60,13 @@ public class UserController {
 
         return ResponseEntity.ok("Contraseña cambiada exitosamente.");
     }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping("/{id}/enabled")
+    public ResponseEntity<String> updateUserEnabledStatus(@PathVariable Long id, @RequestParam @NotNull Boolean isEnabled){
+        servicePort.toggleEnabled(id,isEnabled);
+        String message = isEnabled ? "Usuario habilitado exitosamente" : "Usuario deshabilitado exitosamente";
+        return ResponseEntity.ok(message);
+    }
+
 }

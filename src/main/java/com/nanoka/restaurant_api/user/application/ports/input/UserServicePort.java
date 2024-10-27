@@ -11,4 +11,5 @@ public interface UserServicePort {
     User update(Long id, User user);
     void delete(Long id);
     void changePassword(String username,String currentPassword, String newPassword);
+    void toggleEnabled(Long id, Boolean isEnabled);
 }

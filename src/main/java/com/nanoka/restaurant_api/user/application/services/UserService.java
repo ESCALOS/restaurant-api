@@ -98,4 +98,14 @@ public class UserService implements UserServicePort {
                 })
                 .orElseThrow(() -> new BadCredentialsException(ErrorCatelog.BAD_CREDENTIALS.getMessage()));
     }
+
+    @Override
+    public void toggleEnabled(Long id, Boolean isEnabled) {
+        User user = persistencePort.findById(id)
+                .orElseThrow(() -> new NotFoundException(ErrorCatelog.USER_NOT_FOUND.getMessage()));
+
+        user.setIsEnabled(isEnabled);
+
+        persistencePort.save(user);
+    }
 }

@@ -20,7 +20,7 @@ public class UserCreateRequest {
     private String name;
 
     @NotNull(message = "El tipo de documento es obligatorio")
-    private DocumentTypeEnum documentType; // Usa DocumentTypeEnum en lugar de String
+    private DocumentTypeEnum documentType;
 
     @NotBlank(message = "El número de documento es obligatorio")
     private String documentNumber;
