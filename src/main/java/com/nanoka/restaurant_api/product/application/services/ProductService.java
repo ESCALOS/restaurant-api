@@ -58,9 +58,15 @@ public class ProductService implements ProductServicePort {
 
     @Override
     public void delete(Long id) {
-        persistencePort.findById(id)
-                .orElseThrow(() ->new NotFoundException(ErrorCatelog.PRODUCT_NOT_FOUND.getMessage()));
+        this.findById(id);
 
         persistencePort.deleteById(id);
+    }
+
+    @Override
+    public Product modifyStock(Long id, Integer stock) {
+        Product product = this.findById(id);
+        product.setStock(stock + product.getStock());
+        return persistencePort.save(product);
     }
 }

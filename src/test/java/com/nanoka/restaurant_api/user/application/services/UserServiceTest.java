@@ -101,6 +101,4 @@ public class UserServiceTest {
         verify(persistencePort).findById(id);
         verify(persistencePort).save(user);
     }
-
-
 }

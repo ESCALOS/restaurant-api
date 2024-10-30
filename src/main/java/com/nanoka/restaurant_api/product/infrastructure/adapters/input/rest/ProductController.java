@@ -52,4 +52,10 @@ public class ProductController {
     public void delete(@PathVariable Long id) {
         servicePort.delete(id);
     }
+
+    @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ProductResponse modifyStock(@PathVariable Long id, @RequestParam int quantity){
+        return restMapper.toProductResponse(servicePort.modifyStock(id,quantity));
+    }
 }

@@ -10,4 +10,5 @@ public interface ProductServicePort {
     Product save(Product product, Boolean isDish);
     Product update(Long id,Product product);
     void delete(Long id);
+    Product modifyStock(Long id, Integer stock);
 }

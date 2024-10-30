@@ -23,7 +23,13 @@ public class UserService implements UserServicePort {
     @Override
     public User findById(Long id) {
         return persistencePort.findById(id)
-                .orElseThrow(() -> new NotFoundException("Usuario no encontrado."));
+                .orElseThrow(() -> new NotFoundException(ErrorCatelog.USER_NOT_FOUND.getMessage()));
+    }
+
+    @Override
+    public User findByUsername(String username) {
+        return persistencePort.findByUsername(username)
+                .orElseThrow(() -> new NotFoundException(ErrorCatelog.USER_NOT_FOUND.getMessage()));
     }
 
     @Override
