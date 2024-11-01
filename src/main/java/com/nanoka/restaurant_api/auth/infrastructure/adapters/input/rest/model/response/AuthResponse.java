@@ -2,10 +2,10 @@ package com.nanoka.restaurant_api.auth.infrastructure.adapters.input.rest.model.
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-@JsonPropertyOrder({"username", "message", "jwt", "status"})
+@JsonPropertyOrder({"username", "message", "token", "status"})
 public record AuthResponse(String username,
                            String message,
-                           String jwt,
+                           String token,
                            boolean status) {
 
 }

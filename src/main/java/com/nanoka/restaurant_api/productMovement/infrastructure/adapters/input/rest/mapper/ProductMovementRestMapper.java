@@ -36,7 +36,6 @@ public abstract class ProductMovementRestMapper {
     public ProductResponse mapToProductResponse(Product product) {
         return new ProductResponse(
                 product.getId(),
-                product.getName(),
-                product.getIsDish());
+                product.getName());
     }
 }

@@ -37,7 +37,7 @@ public class JwtUtils {
         return JWT.create()
                 .withIssuer(this.userGenerator)
                 .withSubject(username)
-                .withClaim("authorities", authorities)
+                .withClaim("role", authorities)
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 1800000))
                 .withJWTId(UUID.randomUUID().toString())

@@ -2,6 +2,6 @@ package com.nanoka.restaurant_api.auth.infrastructure.adapters.input.rest.model.
 
 import jakarta.validation.constraints.NotBlank;
 
-public record AuthLoginRequest(@NotBlank String username,
-                           @NotBlank String password) {
+public record AuthLoginRequest(@NotBlank(message = "Falta el nombre de usuario") String username,
+                           @NotBlank(message = "Falta la contraseña") String password) {
 }
