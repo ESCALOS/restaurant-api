@@ -5,7 +5,6 @@ import com.nanoka.restaurant_api.table.infrastructure.adapters.input.rest.model.
 import com.nanoka.restaurant_api.table.infrastructure.adapters.input.rest.model.response.TableResponse;
 import com.nanoka.restaurant_api.table.application.ports.input.TableServicePort;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,13 +51,5 @@ public class TableController {
     @PreAuthorize("hasRole('ADMIN')")
     public void delete(@PathVariable Long id) {
         servicePort.delete(id);
-    }
-
-    @PatchMapping("/{id}/enabled")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> enable(@PathVariable Long id, @RequestParam @NotNull Boolean isEnabled) {
-        servicePort.toggleEnabled(id,isEnabled);
-        String message = isEnabled ? "Mesa habilitada exitosamente" : "Mesa deshabilitada exitosamente";
-        return ResponseEntity.ok(message);
     }
 }
