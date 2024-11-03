@@ -2,6 +2,7 @@ package com.nanoka.restaurant_api.productMovement.application.ports.output;
 
 import com.nanoka.restaurant_api.productMovement.domain.model.ProductMovement;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 

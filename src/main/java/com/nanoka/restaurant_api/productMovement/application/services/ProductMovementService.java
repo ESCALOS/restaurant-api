@@ -5,6 +5,7 @@ import com.nanoka.restaurant_api.productMovement.application.events.ProductMovem
 import com.nanoka.restaurant_api.productMovement.application.events.ProductMovementUpdatedEvent;
 import com.nanoka.restaurant_api.productMovement.application.ports.input.ProductMovementServicePort;
 import com.nanoka.restaurant_api.productMovement.application.ports.output.ProductMovementPersistencePort;
+import com.nanoka.restaurant_api.productMovement.domain.model.MovementTypeEnum;
 import com.nanoka.restaurant_api.productMovement.domain.model.ProductMovement;
 import com.nanoka.restaurant_api.user.application.ports.input.UserServicePort;
 import com.nanoka.restaurant_api.user.domain.model.User;
@@ -19,8 +20,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -113,38 +116,40 @@ public class ProductMovementService implements ProductMovementServicePort {
     }
 
     // Método para exportar todos los movimientos de productos a un archivo Excel
-    public void exportProductMovementsToExcel(String filePath) throws IOException {
+    @Override
+    public byte[] exportProductsToExcel() throws IOException {
         List<ProductMovement> productMovements = findAll();
 
-        Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("Product Movements");
+        try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            Sheet sheet = workbook.createSheet("Movimiento de Productos");
 
-        Row headerRow = sheet.createRow(0);
-        headerRow.createCell(0).setCellValue("ID");
-        headerRow.createCell(1).setCellValue("Product ID");
-        headerRow.createCell(2).setCellValue("Quantity");
-        headerRow.createCell(3).setCellValue("Movement Type");
-        headerRow.createCell(4).setCellValue("User ID");
-        headerRow.createCell(5).setCellValue("Date");
+            Row headerRow = sheet.createRow(0);
+            headerRow.createCell(0).setCellValue("ID");
+            headerRow.createCell(1).setCellValue("Producto");
+            headerRow.createCell(2).setCellValue("Cantidad");
+            headerRow.createCell(3).setCellValue("Tipo de Movimiento");
+            headerRow.createCell(4).setCellValue("Usuario");
+            headerRow.createCell(5).setCellValue("Fecha");
 
-        int rowNum = 1;
-        for (ProductMovement movement : productMovements) {
-            Row row = sheet.createRow(rowNum++);
-            row.createCell(0).setCellValue(movement.getId());
-            row.createCell(1).setCellValue(movement.getProduct().getId());
-            row.createCell(2).setCellValue(movement.getQuantity());
-            row.createCell(3).setCellValue(movement.getMovementType().toString());
-            row.createCell(4).setCellValue(movement.getUser().getId());
-            row.createCell(5).setCellValue(movement.getDate().toString());
+            int rowNum = 1;
+            for (ProductMovement movement : productMovements) {
+                String productMovementType = movement.getMovementType() == MovementTypeEnum.INPUT ? "Ingreso": "Salida";
+                Row row = sheet.createRow(rowNum++);
+                row.createCell(0).setCellValue(rowNum - 1);
+                row.createCell(1).setCellValue(movement.getProduct().getName());
+                row.createCell(2).setCellValue(movement.getQuantity());
+                row.createCell(3).setCellValue(productMovementType);
+                row.createCell(4).setCellValue(movement.getUser().getName());
+                row.createCell(5).setCellValue(LocalDateTime.now().toLocalDate().toString());
+            }
+
+            for (int i = 0; i < 6; i++) {
+                sheet.autoSizeColumn(i);
+            }
+
+            // Escribir los datos en el output stream y devolver los bytes
+            workbook.write(out);
+            return out.toByteArray();
         }
-
-        for (int i = 0; i < 6; i++) {
-            sheet.autoSizeColumn(i);
-        }
-
-        try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
-            workbook.write(fileOut);
-        }
-        workbook.close();
     }
 }

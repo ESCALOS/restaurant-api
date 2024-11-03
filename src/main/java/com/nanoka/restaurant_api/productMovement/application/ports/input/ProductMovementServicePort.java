@@ -2,6 +2,7 @@ package com.nanoka.restaurant_api.productMovement.application.ports.input;
 
 import com.nanoka.restaurant_api.productMovement.domain.model.ProductMovement;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface ProductMovementServicePort {
@@ -14,4 +15,5 @@ public interface ProductMovementServicePort {
     ProductMovement update(Long id, int newQuantity);
     void delete(Long id);
     void deleteByOrderId(Long orderId);
+    byte[] exportProductsToExcel() throws IOException;
 }

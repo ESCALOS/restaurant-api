@@ -11,6 +11,8 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
@@ -75,43 +77,43 @@ public class ProductService implements ProductServicePort {
         return persistencePort.save(product);
     }
 
-    // Método para exportar productos a un archivo Excel
-    public void exportProductsToExcel(String filePath) throws IOException {
-        List<Product> products = findAll(false); // Si deseas incluir solo productos que no son platos
+    @Override
+    public byte[] exportProductsToExcel() throws IOException {
+        List<Product> products = findAll(false);
 
-        Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("Products");
+        try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            Sheet sheet = workbook.createSheet("Products");
 
-        Row headerRow = sheet.createRow(0);
-        headerRow.createCell(0).setCellValue("ID");
-        headerRow.createCell(1).setCellValue("Name");
-        headerRow.createCell(2).setCellValue("Description");
-        headerRow.createCell(3).setCellValue("Price");
-        headerRow.createCell(4).setCellValue("Category");
-        headerRow.createCell(5).setCellValue("Stock");
-        headerRow.createCell(6).setCellValue("Min Stock");
-        headerRow.createCell(7).setCellValue("Is Dish");
+            // Crear encabezado
+            Row headerRow = sheet.createRow(0);
+            headerRow.createCell(0).setCellValue("ID");
+            headerRow.createCell(1).setCellValue("Nombre");
+            headerRow.createCell(2).setCellValue("Descripción");
+            headerRow.createCell(3).setCellValue("Precio");
+            headerRow.createCell(4).setCellValue("Categoría");
+            headerRow.createCell(5).setCellValue("Stock");
+            headerRow.createCell(6).setCellValue("Stock Mínimo");
 
-        int rowNum = 1;
-        for (Product product : products) {
-            Row row = sheet.createRow(rowNum++);
-            row.createCell(0).setCellValue(product.getId());
-            row.createCell(1).setCellValue(product.getName());
-            row.createCell(2).setCellValue(product.getDescription());
-            row.createCell(3).setCellValue(product.getPrice().doubleValue());
-            row.createCell(4).setCellValue(product.getCategory().toString());
-            row.createCell(5).setCellValue(product.getStock());
-            row.createCell(6).setCellValue(product.getMinStock());
-            row.createCell(7).setCellValue(product.getIsDish());
+            // Crear filas con los datos de productos
+            int rowNum = 1;
+            for (Product product : products) {
+                Row row = sheet.createRow(rowNum++);
+                row.createCell(0).setCellValue(rowNum - 1);
+                row.createCell(1).setCellValue(product.getName());
+                row.createCell(2).setCellValue(product.getDescription());
+                row.createCell(3).setCellValue(product.getPrice().doubleValue());
+                row.createCell(4).setCellValue(product.getCategory().getName());
+                row.createCell(5).setCellValue(product.getStock());
+                row.createCell(6).setCellValue(product.getMinStock());
+            }
+
+            for (int i = 0; i < 7; i++) {
+                sheet.autoSizeColumn(i);
+            }
+
+            // Escribir los datos en el output stream y devolver los bytes
+            workbook.write(out);
+            return out.toByteArray();
         }
-
-        for (int i = 0; i < 8; i++) {
-            sheet.autoSizeColumn(i);
-        }
-
-        try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
-            workbook.write(fileOut);
-        }
-        workbook.close();
     }
 }
