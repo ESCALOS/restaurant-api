@@ -58,7 +58,7 @@ public class TableController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> enable(@PathVariable Long id, @RequestParam @NotNull Boolean isEnabled) {
         servicePort.toggleEnabled(id,isEnabled);
-        String message = isEnabled ? "Mesaz habilitada exitosamente" : "Mesa deshabilitada exitosamente";
+        String message = isEnabled ? "Mesa habilitada exitosamente" : "Mesa deshabilitada exitosamente";
         return ResponseEntity.ok(message);
     }
 }
