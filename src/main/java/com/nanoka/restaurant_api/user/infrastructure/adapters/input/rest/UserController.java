@@ -53,6 +53,7 @@ public class UserController {
     }
 
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("isAuthenticated()")
     @PatchMapping("/change-password")
     public ResponseEntity<String> changePassword(@RequestBody @Valid ChangePasswordRequest request) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();

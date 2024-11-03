@@ -10,4 +10,5 @@ public interface TableServicePort {
     Table save(Table table);
     Table update(Long id, Table table);
     void delete(Long id);
+    void toggleEnabled(Long id, Boolean isEnabled);
 }

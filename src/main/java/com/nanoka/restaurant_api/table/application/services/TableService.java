@@ -38,6 +38,8 @@ public class TableService implements TableServicePort {
         return persistencePort.save(table);
     }
 
+
+
     @Override
     public Table update(Long id, Table table) {
         return persistencePort.findById(id)
@@ -59,5 +61,14 @@ public class TableService implements TableServicePort {
                 .orElseThrow(() -> new NotFoundException(ErrorCatelog.TABLE_NOT_FOUND.getMessage()));
 
         persistencePort.deleteById(id);
+    }
+
+    @Override
+    public void toggleEnabled(Long id, Boolean isEnabled) {
+        Table table = this.findById(id);
+
+        table.setIsAvailable(isEnabled);
+
+        persistencePort.save(table);
     }
 }

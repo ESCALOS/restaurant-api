@@ -50,7 +50,7 @@ public class UserService implements UserServicePort {
         });
 
         // Colocar los datos por defecto
-        user.setPassword("password");
+        user.setPassword(passwordEncoder.encode("password"));
         user.setIsEnabled(true);
 
         // Persistir los datos en la BD
@@ -99,7 +99,7 @@ public class UserService implements UserServicePort {
         persistencePort.findByUsername(username)
                 .filter(user -> passwordEncoder.matches(currentPassword, user.getPassword()))
                 .map(user -> {
-                    user.setPassword(newPassword);
+                    user.setPassword(passwordEncoder.encode(newPassword));
                     return persistencePort.save(user);
                 })
                 .orElseThrow(() -> new BadCredentialsException(ErrorCatelog.BAD_CREDENTIALS.getMessage()));

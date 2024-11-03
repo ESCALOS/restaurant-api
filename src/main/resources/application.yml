@@ -17,7 +17,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     database-platform: org.hibernate.dialect.MySQLDialect
 logging:
   level:
@@ -26,7 +26,4 @@ security:
   jwt:
     user: ${JWT_USER}
     secret-key: ${JWT_SECRET_KEY}
-    expiration: 86400000
-    refresh-token:
-      expiration: 604800000
 debug: true
