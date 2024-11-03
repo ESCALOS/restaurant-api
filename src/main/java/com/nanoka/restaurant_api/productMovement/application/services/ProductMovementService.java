@@ -12,11 +12,15 @@ import com.nanoka.restaurant_api.util.ErrorCatelog;
 import com.nanoka.restaurant_api.util.exceptions.ConflictException;
 import com.nanoka.restaurant_api.util.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -35,7 +39,7 @@ public class ProductMovementService implements ProductMovementServicePort {
 
     @Override
     public ProductMovement findByOrderIdAndProductId(Long orderId, Long productId) {
-        return persistencePort.findByOrderIdAndProductId(orderId,productId)
+        return persistencePort.findByOrderIdAndProductId(orderId, productId)
                 .orElseThrow(() -> new NotFoundException(ErrorCatelog.PRODUCT_MOVEMENT_NOT_FOUND.getMessage()));
     }
 
@@ -54,16 +58,13 @@ public class ProductMovementService implements ProductMovementServicePort {
         return persistencePort.findAllByProductId(productId);
     }
 
-    // Enviar evento al crear un movimiento
     @Override
     @Transactional
     public ProductMovement save(ProductMovement productMovement) {
-        // Verifica si el producto es un plato
         if (productMovement.getProduct().getIsDish()) {
             throw new ConflictException("No se puede agregar un movimiento para un plato de comida.");
         }
 
-        // Obtén el usuario desde el contexto de seguridad
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userServicePort.findByUsername(username);
         productMovement.setUser(user);
@@ -73,37 +74,28 @@ public class ProductMovementService implements ProductMovementServicePort {
         return savedMovement;
     }
 
-    // Enviar evento al actualizar un movimiento
     @Override
     @Transactional
     public ProductMovement update(Long id, int newQuantity) {
-        // Encontrar el movimiento existente
         ProductMovement existingMovement = persistencePort.findById(id)
                 .orElseThrow(() -> new NotFoundException(ErrorCatelog.PRODUCT_MOVEMENT_NOT_FOUND.getMessage()));
 
-        // Guardar la cantidad anterior antes de actualizar
         int oldQuantity = existingMovement.getQuantity();
-
-        // Actualizar la cantidad del movimiento
         existingMovement.setQuantity(newQuantity);
 
-        // Guardar el movimiento actualizado
         ProductMovement updatedMovement = persistencePort.save(existingMovement);
 
-        // Crear un evento con la cantidad antigua y nueva
         ProductMovement oldMovement = new ProductMovement();
         oldMovement.setId(existingMovement.getId());
         oldMovement.setProduct(existingMovement.getProduct());
         oldMovement.setQuantity(oldQuantity);
         oldMovement.setMovementType(existingMovement.getMovementType());
 
-        // Publicar el evento de actualización
         eventPublisher.publishEvent(new ProductMovementUpdatedEvent(oldMovement, updatedMovement));
 
         return updatedMovement;
     }
 
-    // Enviar evento al eliminar un movimiento
     @Override
     @Transactional
     public void delete(Long id) {
@@ -118,5 +110,41 @@ public class ProductMovementService implements ProductMovementServicePort {
     @Override
     public void deleteByOrderId(Long orderId) {
         persistencePort.deleteByOrderId(orderId);
+    }
+
+    // Método para exportar todos los movimientos de productos a un archivo Excel
+    public void exportProductMovementsToExcel(String filePath) throws IOException {
+        List<ProductMovement> productMovements = findAll();
+
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Product Movements");
+
+        Row headerRow = sheet.createRow(0);
+        headerRow.createCell(0).setCellValue("ID");
+        headerRow.createCell(1).setCellValue("Product ID");
+        headerRow.createCell(2).setCellValue("Quantity");
+        headerRow.createCell(3).setCellValue("Movement Type");
+        headerRow.createCell(4).setCellValue("User ID");
+        headerRow.createCell(5).setCellValue("Date");
+
+        int rowNum = 1;
+        for (ProductMovement movement : productMovements) {
+            Row row = sheet.createRow(rowNum++);
+            row.createCell(0).setCellValue(movement.getId());
+            row.createCell(1).setCellValue(movement.getProduct().getId());
+            row.createCell(2).setCellValue(movement.getQuantity());
+            row.createCell(3).setCellValue(movement.getMovementType().toString());
+            row.createCell(4).setCellValue(movement.getUser().getId());
+            row.createCell(5).setCellValue(movement.getDate().toString());
+        }
+
+        for (int i = 0; i < 6; i++) {
+            sheet.autoSizeColumn(i);
+        }
+
+        try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
+            workbook.write(fileOut);
+        }
+        workbook.close();
     }
 }
