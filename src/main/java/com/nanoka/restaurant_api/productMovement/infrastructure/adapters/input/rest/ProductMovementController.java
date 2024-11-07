@@ -6,11 +6,14 @@ import com.nanoka.restaurant_api.productMovement.infrastructure.adapters.input.r
 import com.nanoka.restaurant_api.productMovement.infrastructure.adapters.input.rest.model.response.ProductMovementResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -48,5 +51,19 @@ public class ProductMovementController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable("id") Long id) {
         servicePort.delete(id);
+    }
+
+    @GetMapping("/export")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<byte[]> exportToExcel() throws IOException {
+        byte[] excelData = servicePort.exportProductsToExcel();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentDispositionFormData("attachment", "movimiento-de-productos.xlsx");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(excelData);
     }
 }

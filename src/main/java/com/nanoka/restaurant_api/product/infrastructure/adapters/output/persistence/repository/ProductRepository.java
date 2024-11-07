@@ -10,6 +10,4 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
     Optional<ProductEntity> findByName(String name);
     List<ProductEntity> findByIsDishTrue();
     List<ProductEntity> findByIsDishFalse();
-    // Método para obtener productos con stock menor al mínimo
-    List<ProductEntity> findByStockLessThanMinStock();
 }
