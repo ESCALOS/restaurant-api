@@ -16,12 +16,18 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @RestControllerAdvice
 public class GlobalControllerAdvice {
+
+    private static final Logger logger = LoggerFactory.getLogger(GlobalControllerAdvice.class);
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NotFoundException.class)
     public ErrorResponse handleUserNotFoundException(NotFoundException ex) {
+        logger.warn("NotFoundException: {}", ex.getMessage());
         return ErrorResponse.builder()
                 .message(ex.getMessage())
                 .timestamp(LocalDateTime.now())
@@ -31,6 +37,7 @@ public class GlobalControllerAdvice {
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(ConflictException.class)
     public ErrorResponse handleBadRequestException(ConflictException ex) {
+        logger.warn("ConflictException: {}", ex.getMessage());
         return ErrorResponse.builder()
                 .message(ex.getMessage())
                 .timestamp(LocalDateTime.now())
@@ -43,7 +50,7 @@ public class GlobalControllerAdvice {
             MethodArgumentNotValidException ex) {
 
         BindingResult result = ex.getBindingResult();
-
+        logger.warn("MethodArgumentNotValidException: {}", ex.getMessage());
         return ErrorResponse.builder()
                 .message(ErrorCatelog.INVALID_USER.getMessage())
                 .details(result.getFieldErrors()
@@ -57,6 +64,7 @@ public class GlobalControllerAdvice {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(AccessDeniedException.class)
     public ErrorResponse handleAccessDeniedException() {
+        logger.warn("AccessDeniedException: Acceso denegado");
         return ErrorResponse.builder()
                 .message(ErrorCatelog.ACCESS_DENIED.getMessage())
                 .timestamp(LocalDateTime.now())
@@ -66,6 +74,7 @@ public class GlobalControllerAdvice {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(BadCredentialsException.class)
     public ErrorResponse handleBadCredentialsException() {
+        logger.warn("BadCredentialsException: Credenciales inválidas");
         return ErrorResponse.builder()
                 .message(ErrorCatelog.BAD_CREDENTIALS.getMessage())
                 .timestamp(LocalDateTime.now())
@@ -77,6 +86,7 @@ public class GlobalControllerAdvice {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public ErrorResponse handleException(Exception ex) {
+        logger.error("Exception: {}", ex.getMessage());
         return ErrorResponse.builder()
                 .message(ErrorCatelog.GENERIC_ERROR.getMessage())
                 .details(Collections.singletonList(ex.getMessage()))

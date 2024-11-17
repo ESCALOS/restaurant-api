@@ -16,8 +16,13 @@ import java.util.Date;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Component
 public class JwtUtils {
+
+    private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
     @Value("${security.jwt.secret-key}")
     private String privateKey;
@@ -33,6 +38,8 @@ public class JwtUtils {
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
+
+        logger.info("Token creado para el usuario: {}", username);
 
         return JWT.create()
                 .withIssuer(this.userGenerator)
@@ -53,8 +60,11 @@ public class JwtUtils {
                     .withIssuer(this.userGenerator)
                     .build();
 
+            logger.info("Token validado correctamente");
+
             return verifier.verify(token);
         } catch (JWTVerificationException e) {
+            logger.error("Error al validar el token: {}", e.getMessage());
             throw new BadCredentialsException("Token no válido");
         }
     }
