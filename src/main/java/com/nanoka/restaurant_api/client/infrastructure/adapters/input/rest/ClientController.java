@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -18,22 +20,26 @@ import java.util.List;
 @RequestMapping("/api/v1/clients")
 @PreAuthorize("isAuthenticated()")
 public class ClientController {
+    private static final Logger logger = LoggerFactory.getLogger(ClientController.class);
     private final ClientServicePort servicePort;
     private final ClientRestMapper restMapper;
 
     @GetMapping
     public List<ClientResponse> findAll() {
+        logger.info("Solicitando todos los clientes");
         return restMapper.toClientResponseList(servicePort.findAll());
     }
 
     @GetMapping("/{id}")
     public ClientResponse findById(@PathVariable("id") Long id) {
-        return  restMapper.toClientResponse(servicePort.findById(id));
+        logger.info("Solicitando cliente con ID: {}", id);
+        return restMapper.toClientResponse(servicePort.findById(id));
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ClientResponse> save(@Valid @RequestBody ClientCreateRequest request) {
+        logger.info("Guardando nuevo cliente con datos: {}", request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(restMapper.toClientResponse(
                         servicePort.save(restMapper.toClient(request))));
@@ -42,6 +48,7 @@ public class ClientController {
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ClientResponse update(@PathVariable Long id, @Valid @RequestBody ClientCreateRequest request) {
+        logger.info("Actualizando cliente con ID: {} y datos: {}", id, request);
         return restMapper.toClientResponse(
                 servicePort.update(id, restMapper.toClient(request)));
     }
@@ -50,6 +57,7 @@ public class ClientController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public void delete(@PathVariable Long id) {
+        logger.info("Eliminando cliente con ID: {}", id);
         servicePort.delete(id);
     }
 }

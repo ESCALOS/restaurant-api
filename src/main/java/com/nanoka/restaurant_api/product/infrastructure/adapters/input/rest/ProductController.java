@@ -22,28 +22,34 @@ import org.springframework.web.bind.annotation.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/products")
 @PreAuthorize("isAuthenticated()")
 public class ProductController {
+    private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
     private final ProductServicePort servicePort;
     private final ProductRestMapper restMapper;
 
     @GetMapping
     public List<ProductResponse> findAll() {
+        logger.info("Obteniendo todos los productos");
         return restMapper.toProductResponseList(servicePort.findAll(false));
     }
 
     @GetMapping("/{id}")
     public ProductResponse findById(@PathVariable("id") Long id) {
-        return  restMapper.toProductResponse(servicePort.findById(id));
+        logger.info("Obteniendo producto con id: {}", id);
+        return restMapper.toProductResponse(servicePort.findById(id));
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProductResponse> save(@Valid @RequestBody ProductCreateRequest request) {
+        logger.info("Guardando nuevo producto");
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(restMapper.toProductResponse(
                         servicePort.save(restMapper.toProduct(request),false)));
@@ -52,6 +58,7 @@ public class ProductController {
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ProductResponse update(@PathVariable Long id, @Valid @RequestBody ProductCreateRequest request) {
+        logger.info("Actualizando producto con id: {}", id);
         return restMapper.toProductResponse(
                 servicePort.update(id, restMapper.toProduct(request)));
     }
@@ -60,18 +67,21 @@ public class ProductController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public void delete(@PathVariable Long id) {
+        logger.info("Eliminando producto con id: {}", id);
         servicePort.delete(id);
     }
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ProductResponse modifyStock(@PathVariable Long id, @RequestParam int quantity){
+        logger.info("Modificando stock del producto con id: {}", id);
         return restMapper.toProductResponse(servicePort.modifyStock(id,quantity));
     }
 
     @GetMapping("/export")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<byte[]> exportToExcel() throws IOException {
+        logger.info("Exportando productos a Excel");
         byte[] excelData = servicePort.exportProductsToExcel();
 
         HttpHeaders headers = new HttpHeaders();

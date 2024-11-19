@@ -19,6 +19,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
@@ -33,37 +35,44 @@ public class ProductMovementService implements ProductMovementServicePort {
     private final ProductMovementPersistencePort persistencePort;
     private final ApplicationEventPublisher eventPublisher;
     private final UserServicePort userServicePort;
+    private static final Logger logger = LoggerFactory.getLogger(ProductMovementService.class);
 
     @Override
     public ProductMovement findById(Long id) {
+        logger.info("Buscando movimiento de producto por ID: {}", id);
         return persistencePort.findById(id)
                 .orElseThrow(() -> new NotFoundException(ErrorCatelog.PRODUCT_MOVEMENT_NOT_FOUND.getMessage()));
     }
 
     @Override
     public ProductMovement findByOrderIdAndProductId(Long orderId, Long productId) {
+        logger.info("Buscando movimiento de producto por Order ID: {} y Product ID: {}", orderId, productId);
         return persistencePort.findByOrderIdAndProductId(orderId, productId)
                 .orElseThrow(() -> new NotFoundException(ErrorCatelog.PRODUCT_MOVEMENT_NOT_FOUND.getMessage()));
     }
 
     @Override
     public List<ProductMovement> findAll() {
+        logger.info("Buscando todos los movimientos de productos");
         return persistencePort.findAll();
     }
 
     @Override
     public List<ProductMovement> findAllByOrderId(Long orderId) {
+        logger.info("Buscando todos los movimientos de productos por Order ID: {}", orderId);
         return persistencePort.findAllByOrderId(orderId);
     }
 
     @Override
     public List<ProductMovement> findAllByProductId(Long productId) {
+        logger.info("Buscando todos los movimientos de productos por Product ID: {}", productId);
         return persistencePort.findAllByProductId(productId);
     }
 
     @Override
     @Transactional
     public ProductMovement save(ProductMovement productMovement) {
+        logger.info("Guardando un nuevo movimiento de producto");
         if (productMovement.getProduct().getIsDish()) {
             throw new ConflictException("No se puede agregar un movimiento para un plato de comida.");
         }
@@ -80,6 +89,7 @@ public class ProductMovementService implements ProductMovementServicePort {
     @Override
     @Transactional
     public ProductMovement update(Long id, int newQuantity) {
+        logger.info("Actualizando la cantidad del movimiento de producto con ID: {}", id);
         ProductMovement existingMovement = persistencePort.findById(id)
                 .orElseThrow(() -> new NotFoundException(ErrorCatelog.PRODUCT_MOVEMENT_NOT_FOUND.getMessage()));
 
@@ -102,6 +112,7 @@ public class ProductMovementService implements ProductMovementServicePort {
     @Override
     @Transactional
     public void delete(Long id) {
+        logger.info("Eliminando el movimiento de producto con ID: {}", id);
         ProductMovement existingMovement = persistencePort.findById(id)
                 .orElseThrow(() -> new NotFoundException(ErrorCatelog.PRODUCT_MOVEMENT_NOT_FOUND.getMessage()));
 
@@ -112,12 +123,14 @@ public class ProductMovementService implements ProductMovementServicePort {
     @Transactional
     @Override
     public void deleteByOrderId(Long orderId) {
+        logger.info("Eliminando movimientos de productos por Order ID: {}", orderId);
         persistencePort.deleteByOrderId(orderId);
     }
 
     // Método para exportar todos los movimientos de productos a un archivo Excel
     @Override
     public byte[] exportProductsToExcel() throws IOException {
+        logger.info("Exportando todos los movimientos de productos a un archivo Excel");
         List<ProductMovement> productMovements = findAll();
 
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {

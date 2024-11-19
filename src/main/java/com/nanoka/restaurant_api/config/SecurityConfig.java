@@ -1,8 +1,7 @@
 package com.nanoka.restaurant_api.config;
 
-import com.nanoka.restaurant_api.auth.application.services.AuthService;
-import com.nanoka.restaurant_api.config.filter.JwtTokenValidator;
-import com.nanoka.restaurant_api.util.JwtUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.NonNull;
@@ -23,13 +22,20 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import com.nanoka.restaurant_api.auth.application.services.AuthService;
+import com.nanoka.restaurant_api.config.filter.JwtTokenValidator;
+import com.nanoka.restaurant_api.util.JwtUtils;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
 
+    private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, JwtUtils jwtUtils) throws Exception {
+        logger.info("Configurando SecurityFilterChain");
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
@@ -41,11 +47,13 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-    return authenticationConfiguration.getAuthenticationManager();
+        logger.info("Configurando AuthenticationManager");
+        return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
     public AuthenticationProvider authenticationProvider(AuthService authService) {
+        logger.info("Configurando AuthenticationProvider");
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder());
         provider.setUserDetailsService(authService);
@@ -54,12 +62,13 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
+        logger.info("Configurando PasswordEncoder");
         return new BCryptPasswordEncoder();
     }
 
-    // Configuración global de CORS
     @Bean
     public WebMvcConfigurer corsConfigurer() {
+        logger.info("Configurando CORS");
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(@NonNull CorsRegistry registry) {

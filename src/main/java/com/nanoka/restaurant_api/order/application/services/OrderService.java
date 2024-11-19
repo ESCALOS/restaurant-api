@@ -1,5 +1,15 @@
 package com.nanoka.restaurant_api.order.application.services;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.nanoka.restaurant_api.order.application.ports.input.OrderServicePort;
 import com.nanoka.restaurant_api.order.application.ports.output.OrderPersistencePort;
 import com.nanoka.restaurant_api.order.domain.model.Order;
@@ -19,19 +29,14 @@ import com.nanoka.restaurant_api.user.domain.model.User;
 import com.nanoka.restaurant_api.util.ErrorCatelog;
 import com.nanoka.restaurant_api.util.exceptions.ConflictException;
 import com.nanoka.restaurant_api.util.exceptions.NotFoundException;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class OrderService implements OrderServicePort {
 
+    private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
     private final OrderPersistencePort persistencePort;
     private final UserServicePort userServicePort;
     private final TableServicePort tableServicePort;
@@ -40,16 +45,21 @@ public class OrderService implements OrderServicePort {
 
     @Override
     public Order findById(Long id) {
+        logger.info("Buscando orden con id: {}", id);
         return persistencePort.findById(id)
                 .orElseThrow(() -> new NotFoundException(ErrorCatelog.ORDER_NOT_FOUND.getMessage()));
     }
 
     @Override
-    public List<Order> findAll() { return persistencePort.findAll(); }
+    public List<Order> findAll() {
+        logger.info("Buscando todas las órdenes");
+        return persistencePort.findAll();
+    }
 
     @Override
     @Transactional
     public Order save(Long tableId, OrderCreateRequest request) {
+        logger.info("Guardando orden para tableId: {}", tableId);
         // Obtén el usuario desde el contexto de seguridad
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userServicePort.findByUsername(username);
@@ -129,6 +139,7 @@ public class OrderService implements OrderServicePort {
     @Override
     @Transactional
     public void delete(Long id) {
+        logger.info("Eliminando orden con id: {}", id);
         // Obtén la orden
         Order order = persistencePort.findById(id)
                 .orElseThrow(() -> new NotFoundException(ErrorCatelog.ORDER_NOT_FOUND.getMessage()));
@@ -162,6 +173,7 @@ public class OrderService implements OrderServicePort {
     @Override
     @Transactional
     public Order addProductToOrder(Long orderId, Long productId, int quantity) {
+        logger.info("Añadiendo producto con id: {} a la orden con id: {}", productId, orderId);
         Order order = findById(orderId);
         Product product = productServicePort.findById(productId);
 
@@ -216,6 +228,7 @@ public class OrderService implements OrderServicePort {
     @Override
     @Transactional
     public Order updateProductQuantity(Long orderId, Long productId, int quantity) {
+        logger.info("Actualizando cantidad del producto con id: {} en la orden con id: {}", productId, orderId);
         Order order = findById(orderId);
 
         // Busca el detalle de la orden
@@ -243,6 +256,7 @@ public class OrderService implements OrderServicePort {
     @Override
     @Transactional
     public void removeProductFromOrder(Long orderId, Long productId) {
+        logger.info("Eliminando producto con id: {} de la orden con id: {}", productId, orderId);
         Order order = findById(orderId);
 
         // Busca el detalle de la orden

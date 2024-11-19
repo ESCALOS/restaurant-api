@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -20,21 +22,25 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ProductService implements ProductServicePort {
+    private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
     private final ProductPersistencePort persistencePort;
 
     @Override
     public Product findById(Long id) {
+        logger.info("Buscando producto con id: {}", id);
         return persistencePort.findById(id)
                 .orElseThrow(() -> new NotFoundException(ErrorCatelog.PRODUCT_NOT_FOUND.getMessage()));
     }
 
     @Override
     public List<Product> findAll(Boolean isDish) {
+        logger.info("Obteniendo todos los productos, isDish: {}", isDish);
         return persistencePort.findAll(isDish);
     }
 
     @Override
     public Product save(Product product, Boolean isDish) {
+        logger.info("Guardando nuevo producto: {}", product.getName());
         persistencePort.findByName(product.getName())
                 .ifPresent(p -> {
                     throw new ConflictException(ErrorCatelog.PRODUCT_ALREADY_EXIST.getMessage());
@@ -45,6 +51,7 @@ public class ProductService implements ProductServicePort {
 
     @Override
     public Product update(Long id, Product product) {
+        logger.info("Actualizando producto con id: {}", id);
         return persistencePort.findById(id)
                 .map(existingProduct -> {
                     persistencePort.findByName(product.getName())
@@ -66,12 +73,14 @@ public class ProductService implements ProductServicePort {
 
     @Override
     public void delete(Long id) {
+        logger.info("Eliminando producto con id: {}", id);
         this.findById(id);
         persistencePort.deleteById(id);
     }
 
     @Override
     public Product modifyStock(Long id, Integer stock) {
+        logger.info("Modificando stock del producto con id: {}", id);
         Product product = this.findById(id);
         product.setStock(stock + product.getStock());
         return persistencePort.save(product);
@@ -79,6 +88,7 @@ public class ProductService implements ProductServicePort {
 
     @Override
     public byte[] exportProductsToExcel() throws IOException {
+        logger.info("Exportando productos a Excel");
         List<Product> products = findAll(false);
 
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
