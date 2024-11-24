@@ -21,4 +21,5 @@ public class User {
  private LocalDateTime createdAt;
  private LocalDateTime updatedAt;
  private RoleEnum role;
+ private String email;
 }

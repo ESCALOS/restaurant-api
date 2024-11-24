@@ -29,7 +29,7 @@ public class UserServiceTest {
 
     @Test
     void shouldSaveUserSuccessfully() {
-        User user = new User(null, "carlos_escate", "password", "Carlos Escate", DocumentTypeEnum.DNI, "123456789", "1234567890", true, null, null, RoleEnum.WAITER);
+        User user = new User(null, "carlos_escate", "password", "Carlos Escate", DocumentTypeEnum.DNI, "123456789", "1234567890", true, null, null, RoleEnum.WAITER,"waiter@elchaufero.com");
 
         when(persistencePort.findByUsername(user.getUsername())).thenReturn(Optional.empty());
         when(persistencePort.findByDocumentNumber(user.getDocumentNumber())).thenReturn(Optional.empty());
@@ -46,7 +46,7 @@ public class UserServiceTest {
 
     @Test
     void shouldThrowConflictExceptionWhenUsernameAlreadyExists() {
-        User user = new User(null, "carlos_escate", "password", "Carlos Escate", DocumentTypeEnum.DNI, "123456789", "1234567890", true, null, null, RoleEnum.WAITER);
+        User user = new User(null, "carlos_escate", "password", "Carlos Escate", DocumentTypeEnum.DNI, "123456789", "1234567890", true, null, null, RoleEnum.WAITER,"waiter@elchaufero.com");
         when(persistencePort.findByUsername("carlos_escate")).thenReturn(Optional.of(user));
 
         ConflictException exception = assertThrows(ConflictException.class, () -> userService.save(user));
@@ -57,8 +57,8 @@ public class UserServiceTest {
     @Test
     void shouldUpdateUserSuccessfully() {
         Long id = 1L;
-        User existingUser = new User(id, "carlosescate", "password", "Carlos Escate", DocumentTypeEnum.DNI, "123456789", "1234567890", true, null, null, RoleEnum.WAITER);
-        User updatedUser = new User(id, "carlosmendoza", "newpassword", "Carlos Mendoza", DocumentTypeEnum.DNI, "987654321", "0987654321", true, null, null, RoleEnum.STOREKEEPER);
+        User existingUser = new User(id, "carlosescate", "password", "Carlos Escate", DocumentTypeEnum.DNI, "123456789", "1234567890", true, null, null, RoleEnum.WAITER, "waiter@elchaufero.com");
+        User updatedUser = new User(id, "carlosmendoza", "newpassword", "Carlos Mendoza", DocumentTypeEnum.DNI, "987654321", "0987654321", true, null, null, RoleEnum.STOREKEEPER, "storekeeper@elchaufero.com");
 
         when(persistencePort.findById(id)).thenReturn(Optional.of(existingUser));
         when(persistencePort.findByUsername(updatedUser.getUsername())).thenReturn(Optional.empty());
@@ -76,7 +76,7 @@ public class UserServiceTest {
     @Test
     void shouldDeleteUserSuccessfully() {
         Long id = 1L;
-        User existingUser = new User(id, "carlosescate", "password", "Carlos Escate", DocumentTypeEnum.DNI, "123456789", "1234567890", true, null, null, RoleEnum.STOREKEEPER);
+        User existingUser = new User(id, "carlosescate", "password", "Carlos Escate", DocumentTypeEnum.DNI, "123456789", "1234567890", true, null, null, RoleEnum.STOREKEEPER,"storekeeper@elchaufero.com");
 
         when(persistencePort.findById(id)).thenReturn(Optional.of(existingUser));
 
@@ -90,7 +90,7 @@ public class UserServiceTest {
     @Test
     void shouldToggleUserEnabledStatusSuccessfully() {
         Long id = 1L;
-        User user = new User(null, "carlos_escate", "password", "Carlos Escate", DocumentTypeEnum.DNI, "123456789", "1234567890", true, null, null, RoleEnum.WAITER);
+        User user = new User(null, "carlos_escate", "password", "Carlos Escate", DocumentTypeEnum.DNI, "123456789", "1234567890", true, null, null, RoleEnum.WAITER,"waiter@elchaufero.com");
 
         when(persistencePort.findById(id)).thenReturn(Optional.of(user));
         when(persistencePort.save(user)).thenReturn(user);

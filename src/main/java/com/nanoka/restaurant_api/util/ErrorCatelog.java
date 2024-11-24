@@ -23,6 +23,7 @@ public enum ErrorCatelog {
     TABLE_ALREADY_EXIST("La mesa ya existe"),
     INVALID_USER("Parámetros de usuario no válidos."),
     USER_USERNAME_ALREADY_EXISTS("El nombre de usuario ya existe."),
+    USER_EMAIL_ALREADY_EXISTS("El correo ya existe."),
     USER_DOCUMENT_NUMBER_ALREADY_EXISTS("Otro usuario ya tiene este número de documento."),
     GENERIC_ERROR("Error inesperado"),
     ACCESS_DENIED("No tienes permiso para acceder a este recurso"),
