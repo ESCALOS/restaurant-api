@@ -41,7 +41,7 @@ public class AuthService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         logger.info("Cargando usuario por nombre de usuario: {}", username);
         UserEntity user = repository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario "+username+" no encontrado"));
 
         List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
 
