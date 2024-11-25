@@ -38,6 +38,12 @@ public class UserService implements UserServicePort {
     }
 
     @Override
+    public User findByEmail(String email) {
+        return persistencePort.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException(ErrorCatelog.USER_NOT_FOUND.getMessage()));
+    }
+
+    @Override
     public List<User> findAll() {
         logger.info("Buscando todos los usuarios");
         return persistencePort.findAll();
@@ -119,6 +125,15 @@ public class UserService implements UserServicePort {
         logger.info("Cambiando contraseña para el usuario: {}", username);
         persistencePort.findByUsername(username)
                 .filter(user -> passwordEncoder.matches(currentPassword, user.getPassword()))
+                .map(user -> {
+                    user.setPassword(passwordEncoder.encode(newPassword));
+                    return persistencePort.save(user);
+                })
+                .orElseThrow(() -> new BadCredentialsException(ErrorCatelog.BAD_CREDENTIALS.getMessage()));
+    }
+    @Override
+    public void passwordReset(Long id,String newPassword) {
+        persistencePort.findById(id)
                 .map(user -> {
                     user.setPassword(passwordEncoder.encode(newPassword));
                     return persistencePort.save(user);

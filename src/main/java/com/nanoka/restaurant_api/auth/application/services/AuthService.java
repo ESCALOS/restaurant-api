@@ -77,4 +77,5 @@ public class AuthService implements UserDetailsService {
 
         return new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
     }
+
 }
