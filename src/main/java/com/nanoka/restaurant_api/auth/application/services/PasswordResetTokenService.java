@@ -3,7 +3,10 @@ package com.nanoka.restaurant_api.auth.application.services;
 import com.nanoka.restaurant_api.auth.application.ports.input.PasswordResetTokenServicePort;
 import com.nanoka.restaurant_api.auth.application.ports.output.PasswordResetTokenPersistencePort;
 import com.nanoka.restaurant_api.auth.domain.model.PasswordResetToken;
+import com.nanoka.restaurant_api.email.application.ports.input.EmailServicePort;
 import com.nanoka.restaurant_api.user.application.ports.input.UserServicePort;
+import com.nanoka.restaurant_api.user.domain.model.User;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,11 +23,16 @@ public class PasswordResetTokenService implements PasswordResetTokenServicePort 
     @Autowired
     private UserServicePort userServicePort;
 
+    @Autowired
+    private EmailServicePort emailServicePort;
+
     @Override
     @Transactional
-    public PasswordResetToken createToken(Long userId) {
+    public void createToken(String email) throws MessagingException {
+        User user = userServicePort.findByEmail(email);
+
         // Verificar si el usuario tiene un token existente
-        Optional<PasswordResetToken> existingTokenOpt = persistencePort.findByUserId(userId);
+        Optional<PasswordResetToken> existingTokenOpt = persistencePort.findByUserId(user.getId());
 
         if (existingTokenOpt.isPresent()) {
             PasswordResetToken existingToken = existingTokenOpt.get();
@@ -33,20 +41,21 @@ public class PasswordResetTokenService implements PasswordResetTokenServicePort 
             if (existingToken.getExpirationDate().isBefore(LocalDateTime.now().plusMinutes(30))) {
                 persistencePort.deleteByToken(existingToken.getToken());  // Eliminar el token antiguo
             } else {
-                return existingToken;  // Si el token aún es válido, lo devolvemos
+                emailServicePort.sendPasswordResetEmail(user.getEmail(),existingToken.getToken());
             }
         }
 
         // Generar un nuevo token
         String token = generateToken();
         PasswordResetToken passwordResetToken = PasswordResetToken.builder()
-                .userId(userId)
+                .userId(user.getId())
                 .token(token)
                 .expirationDate(LocalDateTime.now().plusHours(1))  // Duración del nuevo token
                 .build();
 
-        // Guardar y devolver el nuevo token
-        return persistencePort.save(passwordResetToken);
+        persistencePort.save(passwordResetToken);
+
+        emailServicePort.sendPasswordResetEmail(user.getEmail(), token);
     }
 
     @Override

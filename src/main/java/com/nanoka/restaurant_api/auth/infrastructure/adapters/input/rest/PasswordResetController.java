@@ -1,12 +1,9 @@
 package com.nanoka.restaurant_api.auth.infrastructure.adapters.input.rest;
 
 import com.nanoka.restaurant_api.auth.application.services.PasswordResetTokenService;
-import com.nanoka.restaurant_api.auth.domain.model.PasswordResetToken;
 import com.nanoka.restaurant_api.auth.infrastructure.adapters.input.rest.model.request.PasswordResetRequest;
 import com.nanoka.restaurant_api.auth.infrastructure.adapters.input.rest.model.request.PasswordResetResetRequest;
-import com.nanoka.restaurant_api.auth.infrastructure.adapters.input.rest.model.response.PasswordResetResponse;
-import com.nanoka.restaurant_api.user.application.ports.input.UserServicePort;
-import com.nanoka.restaurant_api.user.domain.model.User;
+import jakarta.mail.MessagingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,19 +17,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @PreAuthorize("permitAll()")
 public class PasswordResetController {
-
     private final PasswordResetTokenService passwordResetTokenService;
-    private final UserServicePort userService;
 
     // Endpoint para crear un token de restablecimiento
     @PostMapping
-    public ResponseEntity<PasswordResetResponse> createResetToken(@RequestBody @Valid PasswordResetRequest request) {
-        // Suponiendo que `userId` se obtiene de alguna forma, como del contexto de seguridad
-        User user = userService.findByEmail(request.getEmail());
-        PasswordResetToken token = passwordResetTokenService.createToken(user.getId());
-
-        PasswordResetResponse response = new PasswordResetResponse(token.getToken());
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<?> createResetToken(@RequestBody @Valid PasswordResetRequest request) throws MessagingException {
+        passwordResetTokenService.createToken(request.getEmail());
+        return ResponseEntity.ok("Correo Enviado");
     }
 
     // Endpoint para validar el token

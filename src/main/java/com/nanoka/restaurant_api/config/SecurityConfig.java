@@ -73,7 +73,7 @@ public class SecurityConfig {
             @Override
             public void addCorsMappings(@NonNull CorsRegistry registry) {
                 registry.addMapping("/**") // Permite CORS en todos los endpoints
-                        .allowedOrigins("http://localhost:5173") // Origen permitido
+                        .allowedOriginPatterns("*") // Origen permitido
                         .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE")
                         .allowedHeaders("*")
                         .allowCredentials(true); // Permite credenciales, si son necesarias
