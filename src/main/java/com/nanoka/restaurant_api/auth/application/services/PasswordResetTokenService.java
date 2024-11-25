@@ -3,7 +3,7 @@ package com.nanoka.restaurant_api.auth.application.services;
 import com.nanoka.restaurant_api.auth.application.ports.input.PasswordResetTokenServicePort;
 import com.nanoka.restaurant_api.auth.application.ports.output.PasswordResetTokenPersistencePort;
 import com.nanoka.restaurant_api.auth.domain.model.PasswordResetToken;
-import com.nanoka.restaurant_api.email.application.ports.input.EmailServicePort;
+import com.nanoka.restaurant_api.email.ports.input.EmailServicePort;
 import com.nanoka.restaurant_api.user.application.ports.input.UserServicePort;
 import com.nanoka.restaurant_api.user.domain.model.User;
 import jakarta.mail.MessagingException;

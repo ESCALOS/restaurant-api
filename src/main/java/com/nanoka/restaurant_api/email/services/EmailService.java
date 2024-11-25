@@ -1,6 +1,6 @@
-package com.nanoka.restaurant_api.email.application.services;
+package com.nanoka.restaurant_api.email.services;
 
-import com.nanoka.restaurant_api.email.application.ports.input.EmailServicePort;
+import com.nanoka.restaurant_api.email.ports.input.EmailServicePort;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;

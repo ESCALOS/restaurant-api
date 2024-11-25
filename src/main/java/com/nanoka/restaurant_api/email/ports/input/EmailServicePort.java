@@ -1,4 +1,4 @@
-package com.nanoka.restaurant_api.email.application.ports.input;
+package com.nanoka.restaurant_api.email.ports.input;
 
 import jakarta.mail.MessagingException;
 
