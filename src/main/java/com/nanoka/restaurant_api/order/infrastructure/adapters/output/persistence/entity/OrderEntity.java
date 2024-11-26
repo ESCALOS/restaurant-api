@@ -1,6 +1,5 @@
 package com.nanoka.restaurant_api.order.infrastructure.adapters.output.persistence.entity;
 
-import com.nanoka.restaurant_api.order.domain.model.StatusEnum;
 import com.nanoka.restaurant_api.orderDetail.persistence.entity.OrderDetailEntity;
 import com.nanoka.restaurant_api.table.infrastructure.adapters.output.persistence.entity.TableEntity;
 import com.nanoka.restaurant_api.user.infrastructure.adapters.output.persistence.entity.UserEntity;
@@ -34,9 +33,8 @@ public class OrderEntity {
     @JoinColumn(name = "table_id")
     private TableEntity table;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private StatusEnum status;
+    private Boolean paid;
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal totalAmount;

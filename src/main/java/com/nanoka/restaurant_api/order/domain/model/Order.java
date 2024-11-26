@@ -18,7 +18,7 @@ public class Order {
     private Long id;
     private User user;
     private Table table;
-    private StatusEnum status;
+    private Boolean paid;
     private BigDecimal totalAmount;
     private List<OrderDetail> detailList;
     private LocalDateTime createdAt;

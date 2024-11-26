@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.nanoka.restaurant_api.order.application.ports.input.OrderServicePort;
 import com.nanoka.restaurant_api.order.application.ports.output.OrderPersistencePort;
 import com.nanoka.restaurant_api.order.domain.model.Order;
-import com.nanoka.restaurant_api.order.domain.model.StatusEnum;
 import com.nanoka.restaurant_api.order.infrastructure.adapters.input.rest.model.request.OrderCreateRequest;
 import com.nanoka.restaurant_api.order.infrastructure.adapters.input.rest.model.request.OrderDetailCreateRequest;
 import com.nanoka.restaurant_api.orderDetail.domain.model.OrderDetail;
@@ -67,7 +66,7 @@ public class OrderService implements OrderServicePort {
         // Crea la orden base
         Order order = new Order();
         order.setUser(user);
-        order.setStatus(StatusEnum.PENDING);
+        order.setPaid(false);
 
         // Asigna la mesa si está presente
         if (tableId != null) {
@@ -146,7 +145,7 @@ public class OrderService implements OrderServicePort {
                 .orElseThrow(() -> new NotFoundException(ErrorCatelog.ORDER_NOT_FOUND.getMessage()));
 
         // Verifica el estado de la orden
-        if (order.getStatus() == StatusEnum.PAID) {
+        if (order.getPaid()) {
             throw new IllegalStateException("No se puede eliminar un pedido que ha sido pagado.");
         }
         System.out.println("Hasta acá llega");
