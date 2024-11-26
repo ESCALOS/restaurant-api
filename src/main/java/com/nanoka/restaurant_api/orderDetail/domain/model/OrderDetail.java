@@ -16,6 +16,7 @@ public class OrderDetail {
     private Long orderId;
     private Product product;
     private int quantity;
+    private int quantityPaid;
     private BigDecimal unitPrice;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

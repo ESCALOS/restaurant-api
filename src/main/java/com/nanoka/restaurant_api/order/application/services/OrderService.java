@@ -111,6 +111,7 @@ public class OrderService implements OrderServicePort {
                     .product(product)
                     .quantity(detailRequest.getQuantity())
                     .unitPrice(product.getPrice())
+                    .quantityPaid(0)
                     .build();
             orderDetails.add(orderDetail);
 

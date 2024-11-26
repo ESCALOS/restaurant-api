@@ -29,6 +29,9 @@ public class OrderDetailEntity {
     private int quantity;
 
     @Column(nullable = false)
+    private int quantityPaid;
+
+    @Column(nullable = false)
     private BigDecimal unitPrice;
 
     @CreationTimestamp
