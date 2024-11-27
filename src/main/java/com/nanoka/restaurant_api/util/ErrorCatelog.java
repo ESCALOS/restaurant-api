@@ -15,6 +15,7 @@ public enum ErrorCatelog {
     CLIENT_ALREADY_EXIST("El cliente ya existe"),
     CLIENT_DOCUMENT_NUMBER_ALREADY_EXISTS("Otro cliente tiene este número de documento"),
     ORDER_NOT_FOUND("Orden no encontrada"),
+    RECEIPT_NOT_FOUND("Recibo no encontrado"),
     PRODUCT_NOT_FOUND_IN_ORDER("El producto no se encuentra en la orden."),
     DUPLICATE_PRODUCT_IN_ORDER("El produto ya existe"),
     PRODUCT_MOVEMENT_NOT_FOUND("El movimiento del producto no existe"),
