@@ -38,4 +38,4 @@ security:
     user: ${JWT_USER}
     secret-key: ${JWT_SECRET_KEY}
 debug: true
-front-domain: http://localhost:3000
+front-domain: ${FRONT_DOMAIN}
