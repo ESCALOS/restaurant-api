@@ -7,4 +7,12 @@ services:
       - "80:80"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
+      - DB_HOST
+      - DB_PASSWORD
+      - DB_USER
+      - GMAIL_PASSWORD
+      - GMAIL_USERNAME
+      - JWT_SECRET_KEY
+      - JWT_USER
+      - FRONT_DOMAIN
     restart: always
