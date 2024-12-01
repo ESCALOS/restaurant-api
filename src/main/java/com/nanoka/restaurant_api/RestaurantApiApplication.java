@@ -38,6 +38,7 @@ public class RestaurantApiApplication {
 //					.phone("941678196")
 //					.isEnabled(true)
 //					.role(RoleEnum.ADMIN)
+//					.email("stornblood6969@gmail.com")
 //					.build();
 //
 //			UserEntity userDaniel = UserEntity.builder()
@@ -49,6 +50,7 @@ public class RestaurantApiApplication {
 //					.phone("926852390")
 //					.isEnabled(true)
 //					.role(RoleEnum.WAITER)
+//					.email("waiter@elchaufero.com")
 //					.build();
 //
 //			UserEntity userRodrigo = UserEntity.builder()
@@ -60,9 +62,22 @@ public class RestaurantApiApplication {
 //					.phone("981683417")
 //					.isEnabled(true)
 //					.role(RoleEnum.STOREKEEPER)
+//					.email("storekeeper@elchaufero.com")
 //					.build();
 //
-//			userRepository.saveAll(List.of(userCarlos, userDaniel, userRodrigo));
+//			UserEntity userStorekeeper = UserEntity.builder()
+//					.username("storekeeper")
+//					.password(new BCryptPasswordEncoder().encode("9012"))
+//					.name("Almacenero")
+//					.documentType(DocumentTypeEnum.DNI)
+//					.documentNumber("70821336")
+//					.phone("981683418")
+//					.isEnabled(true)
+//					.role(RoleEnum.CASHIER)
+//					.email("cashier@elchaufero.com")
+//					.build();
+//
+//			userRepository.saveAll(List.of(userCarlos, userDaniel, userRodrigo,userStorekeeper));
 //		};
 //	}
 }

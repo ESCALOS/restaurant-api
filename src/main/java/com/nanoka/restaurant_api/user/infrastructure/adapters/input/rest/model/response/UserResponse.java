@@ -22,4 +22,5 @@ public class UserResponse {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private RoleEnum role;
+    private String email;
 }

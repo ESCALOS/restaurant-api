@@ -38,6 +38,12 @@ public class UserService implements UserServicePort {
     }
 
     @Override
+    public User findByEmail(String email) {
+        return persistencePort.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException(ErrorCatelog.USER_NOT_FOUND.getMessage()));
+    }
+
+    @Override
     public List<User> findAll() {
         logger.info("Buscando todos los usuarios");
         return persistencePort.findAll();
@@ -49,6 +55,11 @@ public class UserService implements UserServicePort {
         // Verificar que el nombre de usuario sea único
         persistencePort.findByUsername(user.getUsername()).ifPresent(u -> {
             throw new ConflictException(ErrorCatelog.USER_USERNAME_ALREADY_EXISTS.getMessage());
+        });
+
+        // Verificar que el correo sea único
+        persistencePort.findByEmail(user.getEmail()).ifPresent(u -> {
+            throw new ConflictException(ErrorCatelog.USER_EMAIL_ALREADY_EXISTS.getMessage());
         });
 
         // Verificar que el número de documento sea único
@@ -72,6 +83,11 @@ public class UserService implements UserServicePort {
                 .orElseThrow(() -> new NotFoundException(ErrorCatelog.USER_NOT_FOUND.getMessage()));
 
         // Verificar que el nombre de usuario sea único
+        persistencePort.findByEmail(user.getEmail())
+                .filter(u -> !u.getEmail().equals(existingUser.getEmail()))
+                .ifPresent(u -> { throw new ConflictException(ErrorCatelog.USER_USERNAME_ALREADY_EXISTS.getMessage()); });
+
+        // Verificar que el nombre de usuario sea único
         persistencePort.findByUsername(user.getUsername())
                 .filter(u -> !u.getUsername().equals(existingUser.getUsername()))
                 .ifPresent(u -> { throw new ConflictException(ErrorCatelog.USER_USERNAME_ALREADY_EXISTS.getMessage()); });
@@ -88,6 +104,7 @@ public class UserService implements UserServicePort {
         existingUser.setDocumentType(user.getDocumentType());
         existingUser.setDocumentNumber(user.getDocumentNumber());
         existingUser.setRole(user.getRole());
+        existingUser.setEmail(user.getEmail());
 
         // Persistir los datos en la BD
         return persistencePort.save(existingUser);
@@ -108,6 +125,15 @@ public class UserService implements UserServicePort {
         logger.info("Cambiando contraseña para el usuario: {}", username);
         persistencePort.findByUsername(username)
                 .filter(user -> passwordEncoder.matches(currentPassword, user.getPassword()))
+                .map(user -> {
+                    user.setPassword(passwordEncoder.encode(newPassword));
+                    return persistencePort.save(user);
+                })
+                .orElseThrow(() -> new BadCredentialsException(ErrorCatelog.BAD_CREDENTIALS.getMessage()));
+    }
+    @Override
+    public void passwordReset(Long id,String newPassword) {
+        persistencePort.findById(id)
                 .map(user -> {
                     user.setPassword(passwordEncoder.encode(newPassword));
                     return persistencePort.save(user);

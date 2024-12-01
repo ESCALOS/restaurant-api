@@ -45,6 +45,7 @@ public class ProductService implements ProductServicePort {
                 .ifPresent(p -> {
                     throw new ConflictException(ErrorCatelog.PRODUCT_ALREADY_EXIST.getMessage());
                 });
+        product.setStock(0);
         product.setIsDish(isDish);
         return persistencePort.save(product);
     }
@@ -64,7 +65,6 @@ public class ProductService implements ProductServicePort {
                     existingProduct.setPrice(product.getPrice());
                     existingProduct.setImageUrl(product.getImageUrl());
                     existingProduct.setCategory(product.getCategory());
-                    existingProduct.setStock(product.getStock());
                     existingProduct.setMinStock(product.getMinStock());
                     return persistencePort.save(existingProduct);
                 })

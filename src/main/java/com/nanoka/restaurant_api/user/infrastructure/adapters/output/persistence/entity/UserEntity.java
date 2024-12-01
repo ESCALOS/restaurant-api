@@ -54,4 +54,6 @@ public class UserEntity {
     @Column(nullable = false)
     private RoleEnum role;
 
+    @Column(nullable = false, unique = true)
+    private String email;
 }

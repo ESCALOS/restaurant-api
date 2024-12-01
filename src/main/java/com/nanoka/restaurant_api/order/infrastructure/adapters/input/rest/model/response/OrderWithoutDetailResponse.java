@@ -1,6 +1,5 @@
 package com.nanoka.restaurant_api.order.infrastructure.adapters.input.rest.model.response;
 
-import com.nanoka.restaurant_api.order.domain.model.StatusEnum;
 import com.nanoka.restaurant_api.table.domain.model.Table;
 import lombok.*;
 
@@ -16,7 +15,7 @@ public class OrderWithoutDetailResponse {
     private Long id;
     private UserResponse user;
     private Table table;
-    private StatusEnum status;
+    private Boolean paid;
     private BigDecimal totalAmount;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

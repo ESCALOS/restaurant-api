@@ -22,10 +22,6 @@ public class ProductCreateRequest {
 
     private String imageUrl;
 
-    @NotNull(message = "Ingrese la cantidad")
-    private int stock;
-
-    @NotNull(message = "Ingrese el stock mínimo")
     private int minStock;
 
     @NotNull(message = "El category_id es obligatorio")
