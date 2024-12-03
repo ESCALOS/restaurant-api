@@ -40,4 +40,4 @@ security:
 debug: true
 server:
   port: 8081 # Port for the backend-domain
-front-domain: http://localhost:3000
+front-domain: ${FRONT_DOMAIN}
