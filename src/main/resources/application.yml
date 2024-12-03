@@ -38,4 +38,6 @@ security:
     user: ${JWT_USER}
     secret-key: ${JWT_SECRET_KEY}
 debug: true
+server:
+  port: 8081 # Port for the backend-domain
 front-domain: http://localhost:3000

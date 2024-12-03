@@ -1,6 +1,6 @@
 package com.nanoka.restaurant_api.receipt.application.ports.input;
 
-import com.nanoka.restaurant_api.receipt.model.Receipt;
+import com.nanoka.restaurant_api.receipt.domain.model.Receipt;
 
 import java.util.List;
 
