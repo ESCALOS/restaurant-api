@@ -36,10 +36,10 @@ public class ReceiptController {
     }
 
     //funcion que recibe un ReceiptCreateRequest y devuelve un ReceiptResponse
-    @PostMapping
+    /*@PostMapping
     public ReceiptResponse create(@RequestBody ReceiptCreateRequest request) {
         logger.info("Creando recibo");
 
-    }
+    }*/
 
 }
