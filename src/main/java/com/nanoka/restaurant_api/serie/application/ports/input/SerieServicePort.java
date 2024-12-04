@@ -1,21 +1,20 @@
 package com.nanoka.restaurant_api.serie.application.ports.input;
 
-import com.nanoka.restaurant_api.serie.domain.model.Serie;
-
 import java.util.List;
 
-public class SerieServicePort {
-    Serie createSerie(Serie serie);
+import com.nanoka.restaurant_api.serie.domain.model.Serie;
+
+public interface SerieServicePort {
+    Serie save(Serie serie);
+    Serie update(Long id, Serie serie);
+    Serie delete(Long id);
     Serie findById(Long id);
     List<Serie> findAll();
-    void desactiveSerie(Long id);
 
     /**
-     * Obtiene y actualiza el siguiente correlativo de una serie.
-     *
-     * @param serieCode Código único de la serie.
-     * @return El siguiente número de correlativo.
+     * Update +1 correlative of serie
+     * @param id
+     * @return
      */
-    int getNextCorrelative(String serieCode);
-
+    Serie updateCorrelative(Long id);
 }
