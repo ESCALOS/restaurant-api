@@ -7,14 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.nanoka.restaurant_api.category.infrastructure.adapters.input.rest.CategoryController;
 import com.nanoka.restaurant_api.serie.application.ports.input.SerieServicePort;
@@ -41,7 +34,7 @@ public class SerieController {
     }
 
     @GetMapping("/{id}")
-    public SerieResponse findById(Long id) {
+    public SerieResponse findById(@PathVariable("id") Long id) {
         logger.info("Fetching serie by id: {}", id);
         return restMapper.toSerieResponse(servicePort.findById(id));
     }
@@ -57,7 +50,7 @@ public class SerieController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public SerieResponse update(Long id, @Valid @RequestBody SerieCreateRequest request) {
+    public SerieResponse update(@PathVariable Long id, @Valid @RequestBody SerieCreateRequest request) {
         logger.info("Updating serie by id: {}", id);
         return restMapper.toSerieResponse(servicePort.update(id, restMapper.toSerie(request)));
     }
@@ -65,9 +58,10 @@ public class SerieController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public SerieResponse delete(Long id) {
+    public void delete(@PathVariable Long id) {
         logger.info("Deleting serie by id: {}", id);
-        return restMapper.toSerieResponse(servicePort.delete(id));
+        //return restMapper.toSerieResponse(servicePort.delete(id));
+        servicePort.delete(id);
     }
 
 }
