@@ -9,6 +9,7 @@ import com.nanoka.restaurant_api.util.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -117,7 +118,12 @@ public class UserService implements UserServicePort {
         persistencePort.findById(id)
                 .orElseThrow(() -> new NotFoundException(ErrorCatelog.USER_NOT_FOUND.getMessage()));
 
-        persistencePort.deleteById(id);
+        try {
+            persistencePort.deleteById(id);
+        } catch (DataIntegrityViolationException ex) {
+            throw new ConflictException("No se puede eliminar al usuario porque tiene dependencias asociadas.");
+        }
+
     }
 
     @Override

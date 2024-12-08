@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.nanoka.restaurant_api.category.application.ports.input.CategoryServicePort;
@@ -80,6 +81,14 @@ public class CategoryService implements CategoryServicePort {
                     return new NotFoundException(ErrorCatelog.CATEGORY_NOT_FOUND.getMessage());
                 });
 
-        persistencePort.deleteById(id);
+        try {
+            // Intentar eliminar la categoría
+            persistencePort.deleteById(id);
+            logger.info("Category with id {} deleted successfully", id);
+        } catch (DataIntegrityViolationException ex) {
+            // Manejar la excepción de integridad referencial
+            logger.error("Cannot delete category with id {}: {}", id, ex.getMessage());
+            throw new ConflictException("No se puede eliminar la categoría porque tiene productos asociados.");
+        }
     }
 }

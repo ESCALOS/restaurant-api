@@ -3,6 +3,7 @@ package com.nanoka.restaurant_api.util;
 import com.nanoka.restaurant_api.util.exceptions.ConflictException;
 import com.nanoka.restaurant_api.util.exceptions.NotFoundException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -102,6 +103,16 @@ public class GlobalControllerAdvice {
         return ErrorResponse.builder()
                 .message(ErrorCatelog.GENERIC_ERROR.getMessage())
                 .details(Collections.singletonList(ex.getMessage()))
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
+
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ErrorResponse handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        return ErrorResponse.builder()
+                .message(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build();
     }

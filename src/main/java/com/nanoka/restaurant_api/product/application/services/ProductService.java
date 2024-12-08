@@ -9,13 +9,12 @@ import com.nanoka.restaurant_api.util.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -75,7 +74,13 @@ public class ProductService implements ProductServicePort {
     public void delete(Long id) {
         logger.info("Eliminando producto con id: {}", id);
         this.findById(id);
-        persistencePort.deleteById(id);
+        try {
+            persistencePort.deleteById(id);
+        } catch (DataIntegrityViolationException ex) {
+            // Manejar la excepción de integridad referencial
+            logger.error("Cannot delete table with id {}: {}", id, ex.getMessage());
+            throw new ConflictException("No se puede eliminar el producto porque tiene órdenes asociadas.");
+        }
     }
 
     @Override

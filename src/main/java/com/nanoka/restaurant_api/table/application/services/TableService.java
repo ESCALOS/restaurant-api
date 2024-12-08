@@ -7,6 +7,7 @@ import com.nanoka.restaurant_api.util.ErrorCatelog;
 import com.nanoka.restaurant_api.util.exceptions.ConflictException;
 import com.nanoka.restaurant_api.util.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,8 +75,14 @@ public class TableService implements TableServicePort {
                     logger.error("No se encontró la mesa con ID: {}", id);
                     return new NotFoundException(ErrorCatelog.TABLE_NOT_FOUND.getMessage());
                 });
-
-        persistencePort.deleteById(id);
+        try {
+            persistencePort.deleteById(id);
+            logger.info("Table with id {} deleted successfully", id);
+        } catch (DataIntegrityViolationException ex) {
+            // Manejar la excepción de integridad referencial
+            logger.error("Cannot delete table with id {}: {}", id, ex.getMessage());
+            throw new ConflictException("No se puede eliminar la mesa porque tiene órdenes asociadas.");
+        }
     }
 
     @Override

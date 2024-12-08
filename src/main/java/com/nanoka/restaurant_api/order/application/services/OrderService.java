@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -146,28 +147,30 @@ public class OrderService implements OrderServicePort {
 
         // Verifica el estado de la orden
         if (order.getPaid()) {
-            throw new IllegalStateException("No se puede eliminar un pedido que ha sido pagado.");
-        }
-        System.out.println("Hasta acá llega");
-        // Elimina los movimientos de productos asociados y ajusta el stock
-        List<ProductMovement> movements = productMovementServicePort.findAllByOrderId(id);
-        for (ProductMovement movement : movements) {
-            // Ajuste del stock: si es un OUTPUT, se debe devolver al stock
-            int quantityAdjustment = movement.getMovementType() == MovementTypeEnum.OUTPUT
-                    ? movement.getQuantity()
-                    : -movement.getQuantity();
-            System.out.println(quantityAdjustment);
-            System.out.println("esto no hace porque no debe de haber ninguno que cumpla la condicion");
-            productServicePort.modifyStock(movement.getProduct().getId(), quantityAdjustment);
+            throw new ConflictException("No se puede eliminar un pedido que ha sido pagado.");
         }
 
-        System.out.println("Aca supuestamente elimina los movimientos");
-        // Elimina todos los movimientos de producto asociados a esta orden
-        productMovementServicePort.deleteByOrderId(id);
+        try {
+            // Elimina los movimientos de productos asociados y ajusta el stock
+            List<ProductMovement> movements = productMovementServicePort.findAllByOrderId(id);
+            for (ProductMovement movement : movements) {
+                // Ajuste del stock: si es un OUTPUT, se debe devolver al stock
+                int quantityAdjustment = movement.getMovementType() == MovementTypeEnum.OUTPUT
+                        ? movement.getQuantity()
+                        : -movement.getQuantity();
+                productServicePort.modifyStock(movement.getProduct().getId(), quantityAdjustment);
+            }
 
-        // Finalmente, elimina la orden
-        System.out.println("acá elimina la orden");
-        persistencePort.deleteById(id);
+            System.out.println("Aca supuestamente elimina los movimientos");
+            // Elimina todos los movimientos de producto asociados a esta orden
+            productMovementServicePort.deleteByOrderId(id);
+
+            // Finalmente, elimina la orden
+
+            persistencePort.deleteById(id);
+        } catch (DataIntegrityViolationException ex) {
+            throw new ConflictException("No se puede eliminar la orden porque tiene recibos asociados.");
+        }
     }
 
     @Override
