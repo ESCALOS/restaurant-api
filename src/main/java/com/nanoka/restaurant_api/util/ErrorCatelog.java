@@ -30,7 +30,8 @@ public enum ErrorCatelog {
     BAD_CREDENTIALS("Contraseña inválida"),
     SERIE_NOT_FOUND("Serie no encontrada"),
     SERIE_ALREADY_EXIST("La serie ya existe"),
-    REPEATED_CORRELATIVE("El correlativo ya existe");
+    REPEATED_CORRELATIVE("El correlativo ya existe"),
+    ORDER_DETAIL_NOT_FOUND("Detalle de orden no encontrado");
 
     private final String message;
 

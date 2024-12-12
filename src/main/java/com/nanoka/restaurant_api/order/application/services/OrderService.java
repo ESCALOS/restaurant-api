@@ -136,6 +136,21 @@ public class OrderService implements OrderServicePort {
         return order;
     }
 
+    /**
+     * Update the order with the given ID.
+     * @param id The ID of the order to update.
+     * @param Order The updated order.
+     */
+    public Order update(Long id, Order order) {
+        logger.info("Actualizando orden con id: {}", id);
+        return persistencePort.findById(id)
+                .map(existingOrder -> {
+                    order.setId(existingOrder.getId());
+                    return persistencePort.save(order);
+                })
+                .orElseThrow(() -> new NotFoundException(ErrorCatelog.ORDER_NOT_FOUND.getMessage()));
+    }
+
     @Override
     @Transactional
     public void delete(Long id) {

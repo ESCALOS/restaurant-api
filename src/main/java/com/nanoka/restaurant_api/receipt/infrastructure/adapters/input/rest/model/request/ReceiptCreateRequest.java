@@ -23,6 +23,12 @@ public class ReceiptCreateRequest {
 
     private Long userId;
 
+    private Long orderId;
+
+    private Long serieId;
+
+    private int correlative;
+
     @NotBlank(message = "Falta el método de pago")
     private String paymentMethod;
 

@@ -46,4 +46,9 @@ public class SeriePersistenceAdapter implements SeriePersistencePort {
         repository.deleteById(id);
     }
 
+    @Override
+    public int getCorrelative(Long id) {
+        return repository.getCorrelative(id);
+    }
+
 }

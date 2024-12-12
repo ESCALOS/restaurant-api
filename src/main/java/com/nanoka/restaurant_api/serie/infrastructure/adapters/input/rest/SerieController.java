@@ -55,6 +55,13 @@ public class SerieController {
         return restMapper.toSerieResponse(servicePort.update(id, restMapper.toSerie(request)));
     }
 
+    @PatchMapping("/{id}/update-correlative")
+    @PreAuthorize("hasRole('ADMIN')")
+    public SerieResponse updateCorrelative(@PathVariable Long id) {
+        logger.info("Updating correlative of serie by id: {}", id);
+        return restMapper.toSerieResponse(servicePort.updateCorrelative(id));
+    }
+
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")

@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ReceiptDetail {
     private Long id;
+    private Long receiptId;
     private OrderDetail orderDetail;
     private int quantity;
     private LocalDateTime createdAt;

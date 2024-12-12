@@ -4,8 +4,10 @@ import com.nanoka.restaurant_api.client.infrastructure.adapters.output.persisten
 import com.nanoka.restaurant_api.order.infrastructure.adapters.output.persistence.entity.OrderEntity;
 import com.nanoka.restaurant_api.receiptDetail.entity.ReceiptDetailEntity;
 import com.nanoka.restaurant_api.user.infrastructure.adapters.output.persistence.entity.UserEntity;
+
 import jakarta.persistence.*;
 import lombok.*;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -13,6 +15,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.nanoka.restaurant_api.serie.infrastructure.adapters.output.persistence.entity.SerieEntity;
 
 @Builder
 @Getter
@@ -25,6 +29,13 @@ public class ReceiptEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "serie_id", nullable = false)
+    private SerieEntity serie;
+
+    @Column(nullable = false)
+    private int correlative;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)

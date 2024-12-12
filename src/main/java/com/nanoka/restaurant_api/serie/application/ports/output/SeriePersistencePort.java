@@ -11,4 +11,5 @@ public interface SeriePersistencePort {
     List<Serie> findAll();
     Serie save(Serie serie);
     void deleteById(Long id);
+    int getCorrelative(Long id);
 }

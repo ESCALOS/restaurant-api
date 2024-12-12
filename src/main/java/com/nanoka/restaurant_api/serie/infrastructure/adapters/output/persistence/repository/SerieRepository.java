@@ -6,4 +6,5 @@ import java.util.Optional;
 
 public interface SerieRepository extends JpaRepository<SerieEntity, Long> {
     Optional<SerieEntity> findBySerie(String serie);
+    int getCorrelative(Long id);
 }

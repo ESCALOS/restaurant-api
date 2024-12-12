@@ -12,6 +12,13 @@ public interface SerieServicePort {
     List<Serie> findAll();
 
     /**
+     * Get correlative of serie
+     * @param id
+     * @return
+     */
+    int getCorrelative(Long id);
+
+    /**
      * Update +1 correlative of serie
      * @param id
      * @return

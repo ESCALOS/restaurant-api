@@ -102,4 +102,15 @@ public class SerieService implements SerieServicePort {
                 });
 
     }
+
+    @Override
+    public int getCorrelative(Long id) {
+        logger.info("Getting correlative of serie with id: {}", id);
+        return persistencePort.findById(id)
+                .map(Serie::getCorrelative)
+                .orElseThrow(() -> {
+                    logger.error("Serie not found with id: {}", id);
+                    return new NotFoundException(ErrorCatelog.SERIE_NOT_FOUND.getMessage());
+                });
+    }
 }
