@@ -39,8 +39,7 @@ public class OrderEntity {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal totalAmount;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "order_id")
+    @OneToMany(mappedBy = "order")
     private List<OrderDetailEntity> detailList = new ArrayList<>();
 
     @CreationTimestamp
