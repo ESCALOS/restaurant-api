@@ -81,7 +81,12 @@ public class ReceiptService implements ReceiptServicePort {
 
         //Obtenemos la orden desde el request
         Order order = orderServicePort.findById(request.getOrderId());
-        
+
+        // Validar que la lista de detalles no esté vacía
+        if (request.getDetails() == null || request.getDetails().isEmpty()) {
+            logger.warn("La lista de detalles del recibo está vacía");
+            throw new IllegalArgumentException("La lista de detalles del recibo no puede estar vacía");
+        }
 
         // Crea el recibo base
         Receipt receipt = new Receipt();

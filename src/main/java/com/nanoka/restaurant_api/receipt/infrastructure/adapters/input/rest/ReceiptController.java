@@ -6,13 +6,17 @@ import com.nanoka.restaurant_api.receipt.infrastructure.adapters.input.rest.mode
 import com.nanoka.restaurant_api.receipt.infrastructure.adapters.input.rest.model.response.ReceiptResponse;
 import com.nanoka.restaurant_api.receipt.infrastructure.adapters.input.rest.model.response.ReceiptWithoutDetailResponse;
 import com.nanoka.restaurant_api.receipt.application.ports.input.ReceiptServicePort;
+
 import lombok.RequiredArgsConstructor;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import org.springframework.http.ResponseEntity;
 
 @RestController
 @RequiredArgsConstructor
@@ -36,10 +40,13 @@ public class ReceiptController {
     }
 
     //funcion que recibe un ReceiptCreateRequest y devuelve un ReceiptResponse
-    /*@PostMapping
-    public ReceiptResponse create(@RequestBody ReceiptCreateRequest request) {
+    @PostMapping
+    public ResponseEntity<ReceiptResponse> save(@RequestBody ReceiptCreateRequest request) {
         logger.info("Creando recibo");
-
-    }*/
+        return ResponseEntity.status(201)
+                .body(restMapper.toReceiptResponse(
+                        servicePort.save(request)));
+    }
+    
 
 }

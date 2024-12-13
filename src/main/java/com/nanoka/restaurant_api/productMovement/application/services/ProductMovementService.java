@@ -73,51 +73,66 @@ public class ProductMovementService implements ProductMovementServicePort {
     @Transactional
     public ProductMovement save(ProductMovement productMovement) {
         logger.info("Guardando un nuevo movimiento de producto");
-        if (productMovement.getProduct().getIsDish()) {
-            throw new ConflictException("No se puede agregar un movimiento para un plato de comida.");
+        try {
+            if (productMovement.getProduct().getIsDish()) {
+                throw new ConflictException("No se puede agregar un movimiento para un plato de comida.");
+            }
+
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userServicePort.findByUsername(username);
+            productMovement.setUser(user);
+
+            ProductMovement savedMovement = persistencePort.save(productMovement);
+            eventPublisher.publishEvent(new ProductMovementCreatedEvent(savedMovement));
+            return savedMovement;
+        } catch (Exception e) {
+            logger.error("Error al guardar el movimiento de producto: ", e);
+            throw e;
         }
-
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userServicePort.findByUsername(username);
-        productMovement.setUser(user);
-
-        ProductMovement savedMovement = persistencePort.save(productMovement);
-        eventPublisher.publishEvent(new ProductMovementCreatedEvent(savedMovement));
-        return savedMovement;
     }
 
     @Override
     @Transactional
     public ProductMovement update(Long id, int newQuantity) {
         logger.info("Actualizando la cantidad del movimiento de producto con ID: {}", id);
-        ProductMovement existingMovement = persistencePort.findById(id)
-                .orElseThrow(() -> new NotFoundException(ErrorCatelog.PRODUCT_MOVEMENT_NOT_FOUND.getMessage()));
+        try {
+            ProductMovement existingMovement = persistencePort.findById(id)
+                    .orElseThrow(() -> new NotFoundException(ErrorCatelog.PRODUCT_MOVEMENT_NOT_FOUND.getMessage()));
 
-        int oldQuantity = existingMovement.getQuantity();
-        existingMovement.setQuantity(newQuantity);
+            int oldQuantity = existingMovement.getQuantity();
+            existingMovement.setQuantity(newQuantity);
 
-        ProductMovement updatedMovement = persistencePort.save(existingMovement);
+            ProductMovement updatedMovement = persistencePort.save(existingMovement);
 
-        ProductMovement oldMovement = new ProductMovement();
-        oldMovement.setId(existingMovement.getId());
-        oldMovement.setProduct(existingMovement.getProduct());
-        oldMovement.setQuantity(oldQuantity);
-        oldMovement.setMovementType(existingMovement.getMovementType());
+            ProductMovement oldMovement = new ProductMovement();
+            oldMovement.setId(existingMovement.getId());
+            oldMovement.setProduct(existingMovement.getProduct());
+            oldMovement.setQuantity(oldQuantity);
+            oldMovement.setMovementType(existingMovement.getMovementType());
 
-        eventPublisher.publishEvent(new ProductMovementUpdatedEvent(oldMovement, updatedMovement));
+            eventPublisher.publishEvent(new ProductMovementUpdatedEvent(oldMovement, updatedMovement));
 
-        return updatedMovement;
+            return updatedMovement;
+        } catch (Exception e) {
+            logger.error("Error al actualizar el movimiento de producto: ", e);
+            throw e;
+        }
     }
 
     @Override
     @Transactional
     public void delete(Long id) {
         logger.info("Eliminando el movimiento de producto con ID: {}", id);
-        ProductMovement existingMovement = persistencePort.findById(id)
-                .orElseThrow(() -> new NotFoundException(ErrorCatelog.PRODUCT_MOVEMENT_NOT_FOUND.getMessage()));
+        try {
+            ProductMovement existingMovement = persistencePort.findById(id)
+                    .orElseThrow(() -> new NotFoundException(ErrorCatelog.PRODUCT_MOVEMENT_NOT_FOUND.getMessage()));
 
-        persistencePort.delete(id);
-        eventPublisher.publishEvent(new ProductMovementDeletedEvent(existingMovement));
+            persistencePort.delete(id);
+            eventPublisher.publishEvent(new ProductMovementDeletedEvent(existingMovement));
+        } catch (Exception e) {
+            logger.error("Error al eliminar el movimiento de producto: ", e);
+            throw e;
+        }
     }
 
     @Transactional

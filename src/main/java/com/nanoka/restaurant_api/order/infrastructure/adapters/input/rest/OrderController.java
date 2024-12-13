@@ -38,7 +38,8 @@ public class OrderController {
     }
 
     @PostMapping("/{tableId}")
-    @PreAuthorize("hasRole('WAITER')")
+    //@PreAuthorize("hasRole('WAITER')") y tambien los admin
+    @PreAuthorize("hasRole('WAITER') or hasRole('ADMIN')")
     public ResponseEntity<OrderResponse> save(@PathVariable(required = false) Long tableId, @Valid @RequestBody OrderCreateRequest request) {
         logger.info("Creando orden para tableId: {}", tableId);
         return ResponseEntity.status(HttpStatus.CREATED)
