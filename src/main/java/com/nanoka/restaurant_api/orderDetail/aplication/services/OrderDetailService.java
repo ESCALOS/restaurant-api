@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OrderDetailService implements OrderDetailServicePort {
 
-    private static final Logger logger = LoggerFactory.getLogger(CategoryService.class);
+    private static final Logger logger = LoggerFactory.getLogger(OrderDetailService.class);
     private final OrderDetailPersistencePort persistencePort;
 
     @Override

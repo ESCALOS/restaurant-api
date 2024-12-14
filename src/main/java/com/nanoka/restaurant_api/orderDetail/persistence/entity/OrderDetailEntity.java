@@ -19,7 +19,7 @@ import com.nanoka.restaurant_api.order.infrastructure.adapters.output.persistenc
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "order_detail")
+@Table(name = "order_details")
 public class OrderDetailEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,6 +29,8 @@ public class OrderDetailEntity {
     @JoinColumn(name = "product_id", nullable = false)
     private ProductEntity product;
 
+    @ManyToOne
+    @JoinColumn(name = "order_id", nullable = false)
     private OrderEntity order;
 
     @Column(nullable = false)
