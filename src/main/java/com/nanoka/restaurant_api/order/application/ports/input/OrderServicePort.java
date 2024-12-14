@@ -9,6 +9,7 @@ public interface OrderServicePort {
     Order findById(Long id);
     List<Order> findAll();
     Order save(Long tableId, OrderCreateRequest orderCreateRequest);
+    Order update(Long id, Order order);
     void delete(Long id);
     Order addProductToOrder(Long orderId, Long productId, int quantity);
     Order updateProductQuantity(Long orderId, Long productId, int quantity);

@@ -38,7 +38,7 @@ class CategoryServiceTest {
 
     @Test
     void shouldSaveCategorySuccessfully() {
-        Category category = new Category(null, "Beverages");
+        Category category = new Category(null, "Beverages", "Description");
         when(persistencePort.findByName("Beverages")).thenReturn(Optional.empty());
         when(persistencePort.save(category)).thenReturn(category);
 
@@ -51,7 +51,7 @@ class CategoryServiceTest {
 
     @Test
     void shouldThrowConflictExceptionWhenCategoryExists() {
-        Category category = new Category(null, "Beverages");
+        Category category = new Category(null, "Beverages", "Description");
         when(persistencePort.findByName("Beverages")).thenReturn(Optional.of(category));
 
         ConflictException exception = assertThrows(ConflictException.class, () -> categoryService.save(category));
@@ -64,8 +64,8 @@ class CategoryServiceTest {
     @Test
     void shouldUpdateCategorySuccessfully() {
         Long id = 1L;
-        Category existingCategory = new Category(id, "Beverages");
-        Category updatedCategory = new Category(id, "Soft Drinks");
+        Category existingCategory = new Category(id, "Beverages", "Description");
+        Category updatedCategory = new Category(id, "Soft Drinks", "New Description");
 
         // Configurar simulación del puerto de persistencia
         when(persistencePort.findById(id)).thenReturn(Optional.of(existingCategory));
@@ -87,7 +87,7 @@ class CategoryServiceTest {
     @Test
     void shouldDeleteCategorySuccessfully() {
         Long id = 1L;
-        Category category = new Category(id, "Beverages");
+        Category category = new Category(id, "Beverages", "Description");
 
         // Configurar simulación del puerto de persistencia
         when(persistencePort.findById(id)).thenReturn(Optional.of(category));

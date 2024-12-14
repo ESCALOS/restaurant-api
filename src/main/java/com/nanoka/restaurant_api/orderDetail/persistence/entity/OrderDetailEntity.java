@@ -1,13 +1,17 @@
 package com.nanoka.restaurant_api.orderDetail.persistence.entity;
 
 import com.nanoka.restaurant_api.product.infrastructure.adapters.output.persistence.entity.ProductEntity;
+
 import jakarta.persistence.*;
 import lombok.*;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+
+import com.nanoka.restaurant_api.order.infrastructure.adapters.output.persistence.entity.OrderEntity;
 
 @Builder
 @Getter
@@ -24,6 +28,10 @@ public class OrderDetailEntity {
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private ProductEntity product;
+
+    @ManyToOne
+    @JoinColumn(name = "order_id", nullable = false)
+    private OrderEntity order;
 
     @Column(nullable = false)
     private int quantity;

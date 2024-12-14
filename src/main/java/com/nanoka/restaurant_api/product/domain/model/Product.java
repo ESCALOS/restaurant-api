@@ -1,6 +1,11 @@
 package com.nanoka.restaurant_api.product.domain.model;
 
 import com.nanoka.restaurant_api.category.domain.model.Category;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -8,8 +13,8 @@ import java.math.BigDecimal;
 @Builder
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class Product {
     private Long id;
     private String name;
