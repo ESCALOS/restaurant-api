@@ -73,6 +73,8 @@ public class OrderService implements OrderServicePort {
         if (tableId != null) {
             Table table = tableServicePort.findById(tableId);
             order.setTable(table);
+
+            tableServicePort.toggleEnabled(tableId, false);
         }
 
         // Asigna temporalmente el total a cero
@@ -140,7 +142,7 @@ public class OrderService implements OrderServicePort {
     /**
      * Update the order with the given ID.
      * @param id The ID of the order to update.
-     * @param Order The updated order.
+     * @param order The updated order.
      */
     public Order update(Long id, Order order) {
         logger.info("Actualizando orden con id: {}", id);
@@ -163,6 +165,10 @@ public class OrderService implements OrderServicePort {
         // Verifica el estado de la orden
         if (order.getPaid()) {
             throw new ConflictException("No se puede eliminar un pedido que ha sido pagado.");
+        }
+
+        if(order.getTable() != null) {
+            tableServicePort.toggleEnabled(order.getTable().getId(),true);
         }
 
         try {
