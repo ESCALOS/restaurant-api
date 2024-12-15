@@ -11,8 +11,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import com.nanoka.restaurant_api.order.infrastructure.adapters.output.persistence.entity.OrderEntity;
-
 @Builder
 @Getter
 @Setter
@@ -28,10 +26,6 @@ public class OrderDetailEntity {
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private ProductEntity product;
-
-    @ManyToOne
-    @JoinColumn(name = "order_id", nullable = false)
-    private OrderEntity order;
 
     @Column(nullable = false)
     private int quantity;

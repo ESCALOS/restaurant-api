@@ -28,12 +28,7 @@ import com.nanoka.restaurant_api.user.domain.model.User;
 import com.nanoka.restaurant_api.client.domain.model.Client;
 import com.nanoka.restaurant_api.order.application.ports.input.OrderServicePort;
 import com.nanoka.restaurant_api.order.domain.model.Order;
-import com.nanoka.restaurant_api.orderDetail.aplication.ports.input.OrderDetailServicePort;
 import com.nanoka.restaurant_api.orderDetail.domain.model.OrderDetail;
-import com.nanoka.restaurant_api.product.application.ports.input.ProductServicePort;
-import com.nanoka.restaurant_api.product.domain.model.Product;
-import com.nanoka.restaurant_api.productMovement.application.ports.input.ProductMovementServicePort;
-import com.nanoka.restaurant_api.productMovement.domain.model.ProductMovement;
 import com.nanoka.restaurant_api.receipt.infrastructure.adapters.input.rest.model.request.ReceiptDetailCreateRequest;
 import com.nanoka.restaurant_api.receiptDetail.model.ReceiptDetail;
 
@@ -49,8 +44,6 @@ public class ReceiptService implements ReceiptServicePort {
     private final SerieServicePort SerieServicePort;
     private final ClientServicePort clientServicePort;
     private final OrderServicePort orderServicePort;
-    private final ProductServicePort productServicePort;
-    private final OrderDetailServicePort orderDetailServicePort;
 
     @Override
     public Receipt findById(Long id) {
@@ -110,7 +103,13 @@ public class ReceiptService implements ReceiptServicePort {
 
         // Manejo de los detalles del recibo
         for (ReceiptDetailCreateRequest detailRequest : request.getDetails()) {
-            OrderDetail orderDetail = orderDetailServicePort.findById(detailRequest.getOrderDetailId()); 
+            OrderDetail orderDetail = order.getDetailList().stream()
+                    .filter(od -> od.getId().equals(detailRequest.getOrderDetailId()))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("No se encontró el detalle de la orden con el ID: " + detailRequest.getOrderDetailId()));
+
+            // Actualiza la cantidad pagada en el detalle de la orden
+            orderDetail.setQuantityPaid(orderDetail.getQuantityPaid() + detailRequest.getQuantity());
 
             // Crea el detalle del recibo
             ReceiptDetail detail = ReceiptDetail.builder()
@@ -118,23 +117,21 @@ public class ReceiptService implements ReceiptServicePort {
                     .quantity(detailRequest.getQuantity())
                     .build();
             detailList.add(detail);
-
-            // Actualiza la cantidad pagada en el detalle de la orden
-            orderDetailServicePort.updateQuantityPaid(orderDetail.getId(), orderDetail.getQuantityPaid() + detailRequest.getQuantity());
         }
 
-        // Verificamos si la orden fue pagada en su totalidad, se verifica si en todos los detalles de la orden la cantidad pagada es igual a la cantidad solicitada
+        // Verificamos si la orden fue pagada en su totalidad
         order.setPaid(order.getDetailList().stream().allMatch(od -> od.getQuantityPaid() == od.getQuantity()));
+
         // Actualizamos la orden
         orderServicePort.update(order.getId(), order);
 
         // Guardamos los detalles del recibo
         receipt.setDetailList(detailList);
-        
-        //guardamos el recibo actualizado
+
+        // Guardamos el recibo actualizado
         receipt = persistencePort.save(receipt);
 
         return receipt;
-
     }
+
 }
