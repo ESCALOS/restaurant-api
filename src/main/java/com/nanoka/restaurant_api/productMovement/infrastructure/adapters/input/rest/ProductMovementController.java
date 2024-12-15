@@ -34,6 +34,11 @@ public class ProductMovementController {
         return restMapper.toProductMovementResponseList(servicePort.findAll());
     }
 
+    @GetMapping("/{productMovementId}")
+    public ProductMovementResponse findById(@PathVariable("productMovementId") Long productMovementId) {
+        return restMapper.toProductMovementResponse(servicePort.findById(productMovementId));
+    }
+
     @GetMapping("/product/{productId}")
     public List<ProductMovementResponse> findByProductId(@PathVariable("productId") Long productId){
         logger.info("Obteniendo movimientos de productos para el producto con ID: {}", productId);
