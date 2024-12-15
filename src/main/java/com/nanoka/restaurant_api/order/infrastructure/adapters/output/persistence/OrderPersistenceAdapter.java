@@ -39,4 +39,10 @@ public class OrderPersistenceAdapter implements OrderPersistencePort {
     public void deleteById(Long id) {
         repository.deleteById(id);
     }
+
+    @Override
+    public Optional<Order> findByPaidFalseAndTableId(Long tableId) {
+        return repository.findByPaidFalseAndTableId(tableId)
+                .map(mapper::toOrder);
+    }
 }

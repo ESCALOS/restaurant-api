@@ -76,4 +76,11 @@ public class OrderController {
         servicePort.removeProductFromOrder(orderId, productId);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/table/{tableId}")
+    @PreAuthorize("hasRole('WAITER')")
+    public OrderResponse getUnpaidOrderByTable(@PathVariable("tableId") Long tableId) {
+        logger.info("Obteniendo orden con tableId: {}", tableId);
+        return restMapper.toOrderResponse(servicePort.getUnpaidOrderByTable(tableId));
+    }
 }

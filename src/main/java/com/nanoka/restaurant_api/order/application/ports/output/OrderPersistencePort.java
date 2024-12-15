@@ -10,4 +10,5 @@ public interface OrderPersistencePort {
     List<Order> findAll();
     Order save(Order category);
     void deleteById(Long id);
+    Optional<Order> findByPaidFalseAndTableId(Long tableId);
 }

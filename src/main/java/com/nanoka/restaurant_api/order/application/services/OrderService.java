@@ -304,4 +304,10 @@ public class OrderService implements OrderServicePort {
         // Guarda la orden actualizada
         persistencePort.save(order);
     }
+
+    @Override
+    public Order getUnpaidOrderByTable(Long tableId) {
+        return persistencePort.findByPaidFalseAndTableId(tableId)
+                .orElseThrow(() -> new NotFoundException(ErrorCatelog.ORDER_NOT_FOUND.getMessage()));
+    }
 }

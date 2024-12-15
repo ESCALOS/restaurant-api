@@ -14,4 +14,5 @@ public interface OrderServicePort {
     Order addProductToOrder(Long orderId, Long productId, int quantity);
     Order updateProductQuantity(Long orderId, Long productId, int quantity);
     void removeProductFromOrder(Long orderId, Long productId);
+    Order getUnpaidOrderByTable(Long tableId);
 }
